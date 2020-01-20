@@ -20,7 +20,6 @@ const mutations = {
     state.funds -= payload.price * payload.quantity;
   },
   setFunds: (state, fund) => {
-    console.log(fund);
     state.funds = fund;
   }
 };
