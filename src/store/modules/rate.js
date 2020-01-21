@@ -14,7 +14,7 @@ const mutations = {
 
 const actions = {
   updateRate: context => {
-    fetch("https://api.exchangeratesapi.io/latest")
+    fetch("https://api.exchangeratesapi.io/latest", { mode: "cors" })
       .then(response => response.json())
       .then(response => {
         context.commit("updateRate", response.rates["USD"]);

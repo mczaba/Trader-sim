@@ -1,39 +1,37 @@
 <template>
-  <div>
-    <nav>
-      <div class="flex-container" id="left-side">
-        <router-link to="/" class="link" active-class="active" exact
-          >Home</router-link
+  <nav>
+    <div class="flex-container" id="left-side">
+      <router-link to="/" class="link" active-class="active" exact
+        >Home</router-link
+      >
+      <router-link to="/portfolio" class="link" active-class="active"
+        >Portfolio</router-link
+      >
+      <router-link to="/favorites" class="link" active-class="active"
+        >Favorites</router-link
+      >
+      <router-link to="/search" class="link" active-class="active"
+        >Search stock</router-link
+      >
+    </div>
+    <div class="flex-container" id="right-side">
+      <p>1€ = {{ rate }}$</p>
+      <div class="dropdown-container">
+        <p
+          class="button"
+          @click.stop="show"
+          :style="{ backgroundColor: color }"
         >
-        <router-link to="/portfolio" class="link" active-class="active"
-          >Portfolio</router-link
-        >
-        <router-link to="/favorites" class="link" active-class="active"
-          >Favorites</router-link
-        >
-        <router-link to="/search" class="link" active-class="active"
-          >Search stock</router-link
-        >
-      </div>
-      <div class="flex-container" id="right-side">
-        <p>1€ = {{ rate }}$</p>
-        <div class="dropdown-container">
-          <p
-            class="button"
-            @click.stop="show"
-            :style="{ backgroundColor: color }"
-          >
-            Save & load ▼
-          </p>
-          <div class="dropdown" v-click-outside="hide" v-if="showDropdown">
-            <p @click="save">Save data</p>
-            <p @click="load">Load data</p>
-          </div>
+          Account ▼
+        </p>
+        <div class="dropdown" v-click-outside="hide" v-if="showDropdown">
+          <router-link to="/signup" class="link">Sign Up</router-link>
+          <router-link to="/login" class="link">Log In</router-link>
         </div>
-        <p id="funds">Funds : {{ funds }}€</p>
       </div>
-    </nav>
-  </div>
+      <p id="funds">Funds : {{ funds }}€</p>
+    </div>
+  </nav>
 </template>
 
 <script>
@@ -60,39 +58,6 @@ export default {
     show() {
       this.showDropdown = true;
       this.color = "#eee";
-    },
-    endDay() {
-      this.$store.commit("changePrices");
-    },
-    save() {
-      fetch("/api", {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(this.$store.state)
-      });
-    },
-    load() {
-      fetch("/api")
-        .then(response => response.json())
-        .then(response => {
-          this.$store.commit("setFunds", response.funds.funds);
-          this.$store.commit("setStock", {
-            BMW: response.owned.BMW,
-            Google: response.owned.Google,
-            Twitter: response.owned.Twitter,
-            Apple: response.owned.Apple
-          });
-          this.$store.commit("setPrices", {
-            BMW: response.prices.BMWPrice,
-            Google: response.prices.GooglePrice,
-            Twitter: response.prices.TwitterPrice,
-            Apple: response.prices.ApplePrice
-          });
-        });
     }
   },
   created() {
@@ -112,6 +77,7 @@ nav {
   justify-content: space-between;
   border-bottom: 1px solid #acacac;
   background-color: #f9f6f6;
+  margin-bottom: 100px;
 }
 .flex-container {
   display: flex;
@@ -160,7 +126,9 @@ nav {
   box-shadow: #eee;
   width: 150px;
   overflow: hidden;
-  p {
+  display: flex;
+  flex-direction: column;
+  .link {
     line-height: 2em;
     cursor: pointer;
     width: 100%;
