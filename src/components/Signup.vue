@@ -1,11 +1,13 @@
 <template>
-  <h1 v-if="userCreated">{{ message }}</h1>
+  <h1 v-if="LoggedInName">
+    Congratulations {{ LoggedInName }} your account is now created
+  </h1>
   <div v-else>
     <h1>sign up</h1>
     <p v-if="errors.length">
       <b>Please correct the following error(s):</b>
     </p>
-    <h2 v-if="message.length > 0">{{ message }}</h2>
+    <h2 v-if="servError">{{ servError }}</h2>
     <ul>
       <li v-for="error in errors" :key="error">{{ error }}</li>
     </ul>
@@ -39,10 +41,16 @@ export default {
       email: "",
       password: "",
       passwordConf: "",
-      errors: [],
-      userCreated: false,
-      message: ""
+      errors: []
     };
+  },
+  computed: {
+    LoggedInName() {
+      return this.$store.getters.username;
+    },
+    servError() {
+      return this.$store.getters.signError;
+    }
   },
   methods: {
     checkForm() {
@@ -71,30 +79,12 @@ export default {
         send = false;
       }
       if (send) {
-        console.log("form validated");
-        fetch("http://localhost:5000/users/signup", {
-          mode: "cors",
-          method: "post",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            username: this.username,
-            email: this.email,
-            password: this.password,
-            passwordConf: this.passwordConf
-          })
-        })
-          .then(response => {
-            if (response.status === 200) {
-              this.userCreated = true;
-            }
-            return response.json();
-          })
-          .then(response => {
-            this.message = response.message;
-          });
+        this.$store.dispatch("signUp", {
+          username: this.username,
+          email: this.email,
+          password: this.password,
+          passwordConf: this.password
+        });
       }
     },
     validateMail(email) {
@@ -106,6 +96,9 @@ export default {
         /\d/.test(password) && /[a-zA-Z]/.test(password) && !/\s/.test(password)
       );
     }
+  },
+  destroyed() {
+    this.$store.commit("setSignError", null);
   }
 };
 </script>

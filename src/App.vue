@@ -1,17 +1,20 @@
 <template>
   <div id="app">
     <navbar></navbar>
+    <status-display></status-display>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
 import navbar from "./components/Navbar.vue";
+import statusDisplay from "./components/statusDisplay.vue";
 
 export default {
   name: "app",
   components: {
-    navbar
+    navbar,
+    statusDisplay
   }
 };
 </script>

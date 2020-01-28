@@ -21,12 +21,30 @@
           class="button"
           @click.stop="show"
           :style="{ backgroundColor: color }"
+          v-if="!authUsername"
         >
           Account ▼
         </p>
-        <div class="dropdown" v-click-outside="hide" v-if="showDropdown">
+        <p v-if="authUsername" @click.stop="show" class="button">
+          {{ authUsername }}▼
+        </p>
+        <div
+          class="dropdown"
+          v-click-outside="hide"
+          @click="hide"
+          v-if="showDropdown && !authUsername"
+        >
           <router-link to="/signup" class="link">Sign Up</router-link>
           <router-link to="/login" class="link">Log In</router-link>
+        </div>
+        <div
+          class="dropdown"
+          v-click-outside="hide"
+          @click="hide"
+          v-if="showDropdown && authUsername"
+        >
+          <p @click="save">Save</p>
+          <p @click="logout">Logout</p>
         </div>
       </div>
       <p id="funds">Funds : {{ funds }}€</p>
@@ -48,6 +66,9 @@ export default {
     },
     rate() {
       return this.$store.getters.rate;
+    },
+    authUsername() {
+      return this.$store.getters.username;
     }
   },
   methods: {
@@ -58,6 +79,18 @@ export default {
     show() {
       this.showDropdown = true;
       this.color = "#eee";
+    },
+    save() {
+      this.$store.dispatch("save");
+    },
+    logout() {
+      this.$store.commit("logOut");
+      this.$store.commit("reset");
+      this.$store.dispatch("setStatus", {
+        message: "Successfully logged out",
+        status: "success"
+      });
+      this.$router.push("/");
     }
   },
   created() {
@@ -77,7 +110,7 @@ nav {
   justify-content: space-between;
   border-bottom: 1px solid #acacac;
   background-color: #f9f6f6;
-  margin-bottom: 100px;
+  margin-bottom: 0;
 }
 .flex-container {
   display: flex;
@@ -101,7 +134,6 @@ nav {
   }
 }
 .link {
-  // border: 1px solid #acacac;
   font-weight: bold;
   color: black;
   opacity: 0.6;
@@ -128,7 +160,8 @@ nav {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  .link {
+  .link,
+  p {
     line-height: 2em;
     cursor: pointer;
     width: 100%;

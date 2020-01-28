@@ -1,10 +1,22 @@
 <template>
   <div class="component">
-    <h1>Trade of View your portfolio</h1>
-    <p>You may save & load your data</p>
-    <p>click on "End Day" to begin a new Day !</p>
-    <hr />
-    <h2>Your funds : {{ funds }}€</h2>
+    <div v-if="username">
+      <h1>Welcome back {{ username }}</h1>
+      <hr />
+      <h2>Your current funds : {{ funds }}€</h2>
+    </div>
+    <div v-else>
+      <h1>Welcome to the stock trader simulator</h1>
+      <p>
+        Here you can search for stocks using real time stock market value, buy
+        and sell them and add them to a watch list. Try to make as much money as
+        you can !
+      </p>
+      <p>
+        You can use the app freely without an account, but to save your data you
+        will need to sign up
+      </p>
+    </div>
   </div>
 </template>
 
@@ -13,6 +25,9 @@ export default {
   computed: {
     funds() {
       return this.$store.getters.fundsFormat;
+    },
+    username() {
+      return this.$store.getters.username;
     }
   }
 };

@@ -28,6 +28,9 @@ const mutations = {
     if (state.owned[index].quantity >= payload.quantity) {
       state.owned[index].quantity -= payload.quantity;
     }
+  },
+  setOwned: (state, owned) => {
+    state.owned = [...owned];
   }
 };
 

@@ -16,6 +16,9 @@ const mutations = {
   removeFromFav: (state, payload) => {
     const index = state.favorites.indexOf(payload);
     state.favorites.splice(index, 1);
+  },
+  setFav: (state, favorites) => {
+    state.favorites = [...favorites];
   }
 };
 
