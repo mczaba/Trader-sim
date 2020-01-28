@@ -28,7 +28,7 @@ export default new Vuex.Store({
   actions: {
     save: context => {
       context.commit("setStatus", { message: "Saving...", status: "pending" });
-      fetch("http://localhost:5000/save", {
+      fetch(`${process.env.VUE_APP_API_ADRESS}/save`, {
         method: "POST",
         mode: "cors",
         headers: {
@@ -68,7 +68,7 @@ export default new Vuex.Store({
         message: "Loading your save...",
         status: "pending"
       });
-      fetch("http://localhost:5000/save", {
+      fetch(`${process.env.VUE_APP_API_ADRESS}/save`, {
         mode: "cors",
         headers: {
           Authorization: `Bearer ${context.state.auth.token}`

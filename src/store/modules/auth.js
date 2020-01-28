@@ -32,7 +32,7 @@ const mutations = {
 
 const actions = {
   logIn: (context, payload) => {
-    fetch("http://localhost:5000/users/login", {
+    fetch(`${process.env.VUE_APP_API_ADRESS}/users/login`, {
       method: "POST",
       mode: "cors",
       headers: {
@@ -82,7 +82,7 @@ const actions = {
       message: "Signing up...",
       status: "pending"
     });
-    fetch("http://localhost:5000/users/signup", {
+    fetch(`${process.env.VUE_APP_API_ADRESS}/users/signup`, {
       mode: "cors",
       method: "post",
       headers: {
