@@ -42,6 +42,7 @@ div {
   width: 100%;
   height: 35px;
   margin-bottom: 100px;
+  text-align: center;
 }
 h2 {
   color: white;
