@@ -1,39 +1,150 @@
 <template>
-  <h1 v-if="LoggedInName">
+  <h1 v-if="LoggedInName" style="text-align: center">
     Congratulations {{ LoggedInName }} your account is now created
   </h1>
   <div v-else>
-    <h1>sign up</h1>
-    <p v-if="errors.length">
-      <b>Please correct the following error(s):</b>
-    </p>
-    <h2 v-if="servError">{{ servError }}</h2>
-    <ul>
-      <li v-for="error in errors" :key="error">{{ error }}</li>
-    </ul>
-    <form action="" method="POST" @submit.prevent="checkForm">
-      <label for="username">username: </label>
-      <input type="text" name="username" v-model="username" />
-      <br />
-      <br />
-      <label for="email">Email: </label>
-      <input type="email" name="email" v-model="email" />
-      <br />
-      <br />
-      <label for="password">Password: </label>
-      <input type="password" name="password" v-model="password" />
-      <br />
-      <br />
-      <label for="passwordConf">Confirm Password: </label>
-      <input type="password" name="passwordConf" v-model="passwordConf" />
-      <br />
-      <br />
-      <input type="submit" value="submit" />
-    </form>
+    <validation-observer v-slot="{ handleSubmit }">
+      <form
+        action=""
+        method="POST"
+        @submit.prevent="handleSubmit(checkForm)"
+        novalidate
+      >
+        <h1>Sign Up</h1>
+        <p v-if="servError" class="error server">{{ servError }}</p>
+        <ul>
+          <li v-for="error in errors" :key="error">{{ error }}</li>
+        </ul>
+        <transition name="slide">
+          <p class="label" v-if="username">username</p>
+        </transition>
+        <validation-provider rules="min:4|required" v-slot="{ errors }">
+          <input
+            type="text"
+            name="username"
+            v-model="username"
+            class="forminput"
+            placeholder="username"
+          />
+          <br />
+          <small v-for="error in errors" :key="error" class="error">{{
+            error
+          }}</small>
+        </validation-provider>
+        <br />
+        <br />
+        <transition name="slide">
+          <p class="label" v-if="email">email</p>
+        </transition>
+        <validation-provider rules="email|required" v-slot="{ errors }">
+          <input
+            type="email"
+            name="email"
+            v-model="email"
+            class="forminput"
+            placeholder="email"
+          />
+          <br />
+          <small v-for="error in errors" :key="error" class="error">{{
+            error
+          }}</small>
+        </validation-provider>
+        <br />
+        <br />
+        <transition name="slide">
+          <p class="label" v-if="password">password</p>
+        </transition>
+        <validation-observer>
+          <validation-provider
+            name="password"
+            rules="min:6|password|required"
+            v-slot="{ errors }"
+          >
+            <input
+              type="password"
+              name="password"
+              v-model="password"
+              class="forminput"
+              placeholder="password"
+            />
+            <br />
+            <small v-for="error in errors" :key="error" class="error">{{
+              error
+            }}</small>
+          </validation-provider>
+          <br />
+          <br />
+          <transition name="slide">
+            <p class="label" v-if="passwordConf">confirm password</p>
+          </transition>
+          <validation-provider
+            name="passwordconf"
+            rules="required|passwordconf:@password"
+            v-slot="{ errors }"
+          >
+            <input
+              type="password"
+              name="passwordConf"
+              v-model="passwordConf"
+              class="forminput"
+              placeholder="confirm password"
+            />
+            <br />
+            <small v-for="error in errors" :key="error" class="error">{{
+              error
+            }}</small>
+          </validation-provider>
+        </validation-observer>
+        <br />
+        <br />
+        <input type="submit" value="Sign Up" class="button" />
+      </form>
+    </validation-observer>
   </div>
 </template>
 
 <script>
+import { ValidationProvider, extend, ValidationObserver } from "vee-validate";
+import { required } from "vee-validate/dist/rules";
+
+extend("min", {
+  validate(value, args) {
+    if (value.length >= args.length) {
+      return true;
+    }
+    return `Must be at least ${args.length} characters long`;
+  },
+  params: ["length"]
+});
+
+extend("required", {
+  ...required,
+  message: "This field is required"
+});
+
+extend("email", value => {
+  const reg = /^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/;
+  if (reg.test(value)) {
+    return true;
+  }
+  return "must be a valid email";
+});
+
+extend("password", value => {
+  if (/\d/.test(value) && /[a-zA-Z]/.test(value) && !/\s/.test(value)) {
+    return true;
+  }
+  return "Must contain letters and numbers";
+});
+
+extend("passwordconf", {
+  params: ["target"],
+  validate(value, { target }) {
+    return value === target;
+  },
+  message: "Must match password"
+});
+
 export default {
   data() {
     return {
@@ -43,6 +154,10 @@ export default {
       passwordConf: "",
       errors: []
     };
+  },
+  components: {
+    ValidationProvider,
+    ValidationObserver
   },
   computed: {
     LoggedInName() {
@@ -54,47 +169,12 @@ export default {
   },
   methods: {
     checkForm() {
-      let send = true;
-      this.errors.splice(0, this.errors.length);
-      if (this.username.length < 4) {
-        this.errors.push("username is too short");
-        send = false;
-      }
-      if (!this.validateMail(this.email)) {
-        this.errors.push("Email field is not a valid email");
-        send = false;
-      }
-      if (this.password.length < 6) {
-        this.errors.push("password needs to be at least 6 characters long");
-        send = false;
-      }
-      if (!this.validatePassword(this.password)) {
-        this.errors.push(
-          "password needs to contain letters and numbers and not whitespace"
-        );
-        send = false;
-      }
-      if (this.password !== this.passwordConf) {
-        this.errors.push("passwords don't match");
-        send = false;
-      }
-      if (send) {
-        this.$store.dispatch("signUp", {
-          username: this.username,
-          email: this.email,
-          password: this.password,
-          passwordConf: this.password
-        });
-      }
-    },
-    validateMail(email) {
-      const reg = /^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/;
-      return reg.test(email);
-    },
-    validatePassword(password) {
-      return (
-        /\d/.test(password) && /[a-zA-Z]/.test(password) && !/\s/.test(password)
-      );
+      this.$store.dispatch("signUp", {
+        username: this.username,
+        email: this.email,
+        password: this.password,
+        passwordConf: this.password
+      });
     }
   },
   destroyed() {
@@ -102,3 +182,70 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+form {
+  width: 400px;
+  margin: auto;
+}
+h1 {
+  margin-bottom: 30px;
+}
+.forminput {
+  border: none;
+  border-bottom: 1px solid #bbb;
+  color: #aaa;
+  padding-bottom: 5px;
+  font-size: 16px;
+  margin-bottom: 10px;
+  &:focus {
+    border-bottom: 2px solid #555;
+    color: #555;
+  }
+}
+.error {
+  color: #dc3545;
+}
+
+.server {
+  margin-bottom: 25px;
+}
+
+.label {
+  position: absolute;
+  font-size: 12px;
+  margin: 0;
+  transform: translateY(-15px);
+  color: #777;
+}
+
+.button {
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-weight: bold;
+  font-size: 15px;
+  color: white;
+  &::-moz-focus-inner {
+    border: 0;
+  }
+  &:disabled {
+    background-color: #007bff52;
+    cursor: not-allowed;
+  }
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.1s ease;
+}
+.slide-enter {
+  transform: translateY(2px);
+  font-size: 16px;
+}
+.slide-leave-to {
+  transform: translateY(2px);
+  font-size: 16px;
+}
+</style>
