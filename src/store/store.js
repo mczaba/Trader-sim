@@ -46,7 +46,6 @@ export default new Vuex.Store({
       }
     },
     sell: ({ commit, getters }, payload) => {
-      console.log(getters);
       if (payload.quantity < 0) {
         alert("can't sell a negative amount");
       } else if (payload.quantity > getters.stockQuantity(payload.symbol)) {
