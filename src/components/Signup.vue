@@ -104,8 +104,15 @@
 </template>
 
 <script>
-import { ValidationProvider, extend, ValidationObserver } from "vee-validate";
+import {
+  ValidationProvider,
+  extend,
+  ValidationObserver,
+  setInteractionMode
+} from "vee-validate";
 import { required } from "vee-validate/dist/rules";
+
+setInteractionMode("eager");
 
 extend("min", {
   validate(value, args) {
@@ -197,7 +204,6 @@ h1 {
   color: #aaa;
   padding-bottom: 5px;
   font-size: 16px;
-  margin-bottom: 10px;
   &:focus {
     border-bottom: 2px solid #555;
     color: #555;
