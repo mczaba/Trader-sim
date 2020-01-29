@@ -73,7 +73,7 @@ form {
   color: #aaa;
   padding-bottom: 5px;
   font-size: 16px;
-  margin-bottom: 10px;
+  width: 100%;
   &:focus {
     border-bottom: 2px solid #555;
     color: #555;
@@ -82,6 +82,7 @@ form {
 .error {
   color: #dc3545;
   margin-bottom: 25px;
+  float: left;
 }
 
 .label {

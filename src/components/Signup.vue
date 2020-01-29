@@ -204,6 +204,7 @@ h1 {
   color: #aaa;
   padding-bottom: 5px;
   font-size: 16px;
+  width: 100%;
   &:focus {
     border-bottom: 2px solid #555;
     color: #555;
@@ -211,6 +212,7 @@ h1 {
 }
 .error {
   color: #dc3545;
+  float: left;
 }
 
 .server {
