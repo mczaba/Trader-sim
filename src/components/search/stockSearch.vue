@@ -61,13 +61,10 @@ export default {
   },
   methods: {
     buy() {
-      this.$store.commit("buy", {
+      this.$store.dispatch("buy", {
         price: this.stock.price,
-        quantity: this.quantity
-      });
-      this.$store.commit("addStock", {
-        symbol: this.stock.symbol,
-        quantity: this.quantity
+        quantity: this.quantity,
+        symbol: this.stock.symbol
       });
       this.quantity = 0;
     },

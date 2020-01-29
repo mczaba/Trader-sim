@@ -47,13 +47,10 @@ export default {
   props: ["stock"],
   methods: {
     sell() {
-      this.$store.commit("buy", {
-        price: -1 * this.price,
-        quantity: this.quantity
-      });
-      this.$store.commit("sellStock", {
-        symbol: this.stock.symbol,
-        quantity: this.quantity
+      this.$store.dispatch("sell", {
+        price: this.price,
+        quantity: this.quantity,
+        symbol: this.stock.symbol
       });
       this.quantity = 0;
     }

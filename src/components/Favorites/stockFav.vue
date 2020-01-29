@@ -58,7 +58,7 @@ export default {
           ) / 100
         );
       }
-      return this.quantity * this.stock.price;
+      return this.quantity * this.price;
     },
     tooExpensive() {
       if (this.totalPrice > this.$store.getters.getFunds) {
@@ -69,13 +69,10 @@ export default {
   },
   methods: {
     buy() {
-      this.$store.commit("buy", {
+      this.$store.dispatch("buy", {
         price: this.price,
-        quantity: this.quantity
-      });
-      this.$store.commit("addStock", {
-        symbol: this.stock,
-        quantity: this.quantity
+        quantity: this.quantity,
+        symbol: this.stock
       });
       this.quantity = 0;
     },

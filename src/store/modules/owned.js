@@ -4,7 +4,15 @@ const state = {
 };
 
 const getters = {
-  owned: () => state.owned
+  owned: state => state.owned,
+  stockQuantity: state => symbol => {
+    const index = state.owned.map(stock => stock.symbol).indexOf(symbol);
+    if (index < 0) {
+      return 0;
+    } else {
+      return state.owned[index].quantity;
+    }
+  }
 };
 
 const mutations = {

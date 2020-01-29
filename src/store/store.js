@@ -26,62 +26,101 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    save: context => {
-      context.commit("setStatus", { message: "Saving...", status: "pending" });
+    buy: ({ commit, state }, payload) => {
+      if (payload.quantity < 0) {
+        alert("can't buy a negative amount");
+      } else {
+        const totalPrice = payload.price * payload.quantity;
+        if (totalPrice > state.funds.funds) {
+          alert("you do not have enough money to buy these stocks");
+        } else {
+          commit("buy", {
+            price: payload.price,
+            quantity: payload.quantity
+          });
+          commit("addStock", {
+            symbol: payload.symbol,
+            quantity: payload.quantity
+          });
+        }
+      }
+    },
+    sell: ({ commit, getters }, payload) => {
+      console.log(getters);
+      if (payload.quantity < 0) {
+        alert("can't sell a negative amount");
+      } else if (payload.quantity > getters.stockQuantity(payload.symbol)) {
+        alert("can't sell more stocks than you own");
+      } else {
+        commit("buy", {
+          price: -1 * payload.price,
+          quantity: payload.quantity
+        });
+        commit("sellStock", {
+          symbol: payload.symbol,
+          quantity: payload.quantity
+        });
+      }
+    },
+    save: ({ commit, dispatch, state }) => {
+      commit("setStatus", {
+        message: "Saving...",
+        status: "pending"
+      });
       fetch(`${process.env.VUE_APP_API_ADRESS}/save`, {
         method: "POST",
         mode: "cors",
         headers: {
           Accept: "application/json",
-          Authorization: `Bearer ${context.state.auth.token}`,
+          Authorization: `Bearer ${state.auth.token}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          funds: context.state.funds.funds,
-          favorites: context.state.favorites.favorites,
-          owned: context.state.owned.owned
+          funds: state.funds.funds,
+          favorites: state.favorites.favorites,
+          owned: state.owned.owned
         })
       })
         .then(response => response.json())
         .then(response => {
           if (response.status !== 200) {
-            context.dispatch("setStatus", {
+            dispatch("setStatus", {
               message: `Couldn't save : ${response.message}`,
               status: "error"
             });
           } else {
-            context.dispatch("setStatus", {
+            dispatch("setStatus", {
               message: "Successfully saved !",
               status: "success"
             });
           }
         })
         .catch(() => {
-          context.dispatch("setStatus", {
+          dispatch("setStatus", {
             message: "Couldn't save : can't reach the server",
             status: "error"
           });
         });
     },
-    load: context => {
-      context.commit("setStatus", {
+    load: ({ commit, dispatch, state }) => {
+      commit("setStatus", {
         message: "Loading your save...",
         status: "pending"
       });
       fetch(`${process.env.VUE_APP_API_ADRESS}/save`, {
         mode: "cors",
         headers: {
-          Authorization: `Bearer ${context.state.auth.token}`
+          Authorization: `Bearer ${state.auth.token}`
         }
       })
         .then(response => response.json())
         .then(response => {
-          context.commit("setFunds", response.funds);
-          context.commit("setOwned", response.owned);
-          context.commit("setFav", response.favorites);
+          commit("setFunds", response.funds);
+          commit("setOwned", response.owned);
+          commit("setFav", response.favorites);
         })
         .catch(() => {
-          context.dispatch("setStatus", {
+          dispatch("setStatus", {
             message: "Couldn't load data : can't reach the server",
             status: "error"
           });
