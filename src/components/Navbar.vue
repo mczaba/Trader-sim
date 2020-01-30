@@ -15,18 +15,24 @@
       >
     </div>
     <div class="flex-container" id="right-side">
+      <p id="funds">Funds : {{ funds }}€</p>
       <p>1€ = {{ rate }}$</p>
       <div class="dropdown-container">
         <p
           class="button"
+          :class="{ dropdownActive: showDropdown }"
           @click.stop="show"
-          :style="{ backgroundColor: color }"
           v-if="!authUsername"
         >
-          Account ▼
+          Account ▾
         </p>
-        <p v-if="authUsername" @click.stop="show" class="button">
-          {{ authUsername }}▼
+        <p
+          v-if="authUsername"
+          @click.stop="show"
+          class="button"
+          :class="{ dropdownActive: showDropdown }"
+        >
+          {{ authUsername }} ▾
         </p>
         <div
           class="dropdown"
@@ -47,7 +53,6 @@
           <p @click="logout">Logout</p>
         </div>
       </div>
-      <p id="funds">Funds : {{ funds }}€</p>
     </div>
   </nav>
 </template>
@@ -56,8 +61,7 @@
 export default {
   data() {
     return {
-      showDropdown: false,
-      color: "#f9f6f6"
+      showDropdown: false
     };
   },
   computed: {
@@ -92,9 +96,6 @@ export default {
       });
       this.$router.push("/");
     }
-  },
-  created() {
-    this.$store.dispatch("updateRate");
   }
 };
 </script>
@@ -108,38 +109,40 @@ nav {
   width: 100%;
   height: 50px;
   justify-content: space-between;
-  border-bottom: 1px solid #acacac;
-  background-color: #f9f6f6;
+  border-bottom: 1px solid var(--borders);
+  background-color: var(--background-secondary);
   margin-bottom: 0;
 }
 .flex-container {
   display: flex;
-  justify-content: space-around;
+  justify-content: stretch;
   align-items: flex-start;
   width: 25%;
   p {
     line-height: 50px;
     width: 150px;
+    flex-grow: 1;
   }
   .button {
     cursor: pointer;
+    border-bottom: 1px solid var(--borders);
+    flex-grow: 1;
+  }
+  .dropdownActive {
+    background-color: var(--background-secondary);
+    border-bottom: 2px solid var(--text-active);
   }
 
   a {
     line-height: 50px;
   }
-
-  #funds {
-    font-weight: bold;
-  }
 }
 .link {
   font-weight: bold;
-  color: black;
-  opacity: 0.6;
   text-decoration: none;
+  flex-grow: 1;
   &:visited {
-    text-decoration: none;
+    color: var(--text-color);
   }
   &:active {
     outline: none;
@@ -147,14 +150,19 @@ nav {
   &:focus {
     outline: none;
   }
+  &:hover {
+    background-color: var(--background-secondary);
+  }
 }
 .active {
-  opacity: 1;
+  color: var(--text-active) !important;
+  border-bottom: 2px solid var(--text-active);
 }
 
 .dropdown {
-  border: 1px solid #eee;
-  border-radius: 2px;
+  background-color: var(--background-secondary);
+  border-bottom-left-radius: 8px;
+
   box-shadow: #eee;
   width: 150px;
   overflow: hidden;
@@ -163,10 +171,11 @@ nav {
   .link,
   p {
     line-height: 2em;
+    font-weight: bold;
     cursor: pointer;
     width: 100%;
     &:hover {
-      background-color: #eee;
+      background-color: var(--background-secondary-active);
     }
   }
 }

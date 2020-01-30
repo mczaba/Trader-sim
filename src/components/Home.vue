@@ -37,9 +37,9 @@ export default {
 .component {
   width: 80%;
   margin: 30px auto 0 auto;
-  border: 1px solid #ccc;
   border-radius: 10px;
   padding: 20px;
+  background-color: var(--background-secondary);
 }
 
 hr {

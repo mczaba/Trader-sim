@@ -58,6 +58,9 @@ export default {
         password: this.password
       });
     }
+  },
+  destroyed() {
+    this.$store.commit("setLogError", null);
   }
 };
 </script>
@@ -69,20 +72,20 @@ form {
 }
 .forminput {
   border: none;
-  border-bottom: 1px solid #bbb;
-  color: #aaa;
+  border-bottom: 1px solid #888;
+  color: #888;
+  background-color: var(--background-main);
   padding-bottom: 5px;
   font-size: 16px;
   width: 100%;
   &:focus {
-    border-bottom: 2px solid #555;
-    color: #555;
+    border-bottom: 2px solid var(--text-color);
+    color: var(--text-color);
   }
 }
 .error {
-  color: #dc3545;
+  color: var(--text-error);
   margin-bottom: 25px;
-  float: left;
 }
 
 .label {
@@ -94,7 +97,7 @@ form {
 }
 
 .button {
-  background-color: #007bff;
+  background-color: var(--button);
   border: none;
   border-radius: 5px;
   padding: 10px;
@@ -103,10 +106,6 @@ form {
   color: white;
   &::-moz-focus-inner {
     border: 0;
-  }
-  &:disabled {
-    background-color: #007bff52;
-    cursor: not-allowed;
   }
 }
 

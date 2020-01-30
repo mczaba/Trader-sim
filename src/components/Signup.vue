@@ -11,10 +11,7 @@
         novalidate
       >
         <h1>Sign Up</h1>
-        <p v-if="servError" class="error server">{{ servError }}</p>
-        <ul>
-          <li v-for="error in errors" :key="error">{{ error }}</li>
-        </ul>
+        <p v-if="servError" class="serverError">{{ servError }}</p>
         <transition name="slide">
           <p class="label" v-if="username">username</p>
         </transition>
@@ -96,7 +93,7 @@
           </validation-provider>
         </validation-observer>
         <br />
-        <br />
+
         <input type="submit" value="Sign Up" class="button" />
       </form>
     </validation-observer>
@@ -158,8 +155,7 @@ export default {
       username: "",
       email: "",
       password: "",
-      passwordConf: "",
-      errors: []
+      passwordConf: ""
     };
   },
   components: {
@@ -200,23 +196,26 @@ h1 {
 }
 .forminput {
   border: none;
-  border-bottom: 1px solid #bbb;
-  color: #aaa;
+  border-bottom: 1px solid #888;
+  color: #888;
+  background-color: var(--background-main);
   padding-bottom: 5px;
   font-size: 16px;
   width: 100%;
   &:focus {
-    border-bottom: 2px solid #555;
-    color: #555;
+    border-bottom: 2px solid var(--text-color);
+    color: var(--text-color);
   }
 }
 .error {
-  color: #dc3545;
+  color: var(--text-error);
   float: left;
 }
 
-.server {
+.serverError {
   margin-bottom: 25px;
+  margin-top: 5px;
+  color: var(--text-error);
 }
 
 .label {
@@ -228,7 +227,7 @@ h1 {
 }
 
 .button {
-  background-color: #007bff;
+  background-color: var(--button);
   border: none;
   border-radius: 5px;
   padding: 10px;
@@ -237,10 +236,6 @@ h1 {
   color: white;
   &::-moz-focus-inner {
     border: 0;
-  }
-  &:disabled {
-    background-color: #007bff52;
-    cursor: not-allowed;
   }
 }
 

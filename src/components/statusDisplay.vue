@@ -41,8 +41,8 @@ export default {
 div {
   width: 100%;
   height: 35px;
-  margin-bottom: 100px;
   text-align: center;
+  background-color: var(--background-main);
 }
 h2 {
   color: white;
@@ -52,7 +52,7 @@ h2 {
 }
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s;
+  transition: opacity 0.5s ease;
 }
 .fade-enter,
 .fade-leave-to {
