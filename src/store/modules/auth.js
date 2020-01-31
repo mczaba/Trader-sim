@@ -87,6 +87,7 @@ const actions = {
     })
       .then(response => response.json())
       .then(response => {
+        commit("toggleLoading");
         if (response.message === "Success") {
           dispatch("logIn", {
             username: payload.username,
