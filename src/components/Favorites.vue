@@ -67,8 +67,10 @@ export default {
   },
   methods: {
     changeActiveStock(stock) {
-      this.activeStock = null;
-      setTimeout(() => (this.activeStock = stock), 1);
+      if (stock !== this.activeStock) {
+        this.activeStock = null;
+        setTimeout(() => (this.activeStock = stock), 1);
+      }
     },
     removeFromFav(stock) {
       const name = stock.customName || stock.symbol;

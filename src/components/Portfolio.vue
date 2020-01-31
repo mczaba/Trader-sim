@@ -73,8 +73,10 @@ export default {
   },
   methods: {
     changeActiveStock(stock) {
-      this.activeStock = null;
-      setTimeout(() => (this.activeStock = stock), 1);
+      if (stock !== this.activeStock) {
+        this.activeStock = null;
+        setTimeout(() => (this.activeStock = stock), 1);
+      }
     },
     soldOut() {
       this.activeStock = null;

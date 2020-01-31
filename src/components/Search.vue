@@ -72,8 +72,10 @@ export default {
   },
   methods: {
     changeActiveStock(stock) {
-      this.activeStock = null;
-      setTimeout(() => (this.activeStock = stock), 1);
+      if (stock !== this.activeStock) {
+        this.activeStock = null;
+        setTimeout(() => (this.activeStock = stock), 1);
+      }
     },
     search() {
       this.$store.commit("toggleLoading");
