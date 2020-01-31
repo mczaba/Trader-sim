@@ -14,24 +14,28 @@
     </div>
     <div class="stocks container">
       <h1>Result</h1>
-      <div class="stockList">
-        <div
-          class="stockContainer"
-          v-for="stock in resultsArray"
-          :key="stock.symbol"
-          :class="{ active: stock === activeStock }"
-          @click="changeActiveStock(stock)"
-        >
-          <h2>{{ stock.symbol }} ({{ stock.name }})</h2>
-          <button
-            :disabled="isInFavorites(stock)"
-            @click.stop="addToFav(stock)"
+      <img src="/load.gif" alt="" v-if="loading" />
+      <div v-else>
+        <div class="stockList" v-if="!error">
+          <div
+            class="stockContainer"
+            v-for="stock in resultsArray"
+            :key="stock.symbol"
+            :class="{ active: stock === activeStock }"
+            @click="changeActiveStock(stock)"
           >
-            {{ favoriteButtonText(stock) }}
-          </button>
+            <h2>{{ stock.symbol }} ({{ stock.name }})</h2>
+            <button
+              :disabled="isInFavorites(stock)"
+              @click.stop="addToFav(stock)"
+            >
+              {{ favoriteButtonText(stock) }}
+            </button>
+          </div>
+          <h2 v-if="notFound">No stock found for you research</h2>
         </div>
+        <h2 v-else>{{ error }}</h2>
       </div>
-      <h2 v-if="notFound">No stock found for you research</h2>
     </div>
     <div class="actions container">
       <h1>Buy Stock</h1>
@@ -57,8 +61,14 @@ export default {
       searchTerm: "",
       resultsArray: [],
       notFound: false,
-      activeStock: null
+      activeStock: null,
+      error: null
     };
+  },
+  computed: {
+    loading() {
+      return this.$store.getters.loading;
+    }
   },
   methods: {
     changeActiveStock(stock) {
@@ -66,24 +76,56 @@ export default {
       setTimeout(() => (this.activeStock = stock), 1);
     },
     search() {
-      const url = `https://api.worldtradingdata.com/api/v1/stock_search?search_term=${this.searchTerm}&api_token=${process.env.VUE_APP_APIKEY}&currency=EUR,USD`;
-      fetch(url, { mode: "cors" })
+      this.$store.commit("toggleLoading");
+      fetch(`${process.env.VUE_APP_API_ADRESS}/API/search/${this.searchTerm}`)
         .then(response => response.json())
         .then(response => {
+          this.$store.commit("toggleLoading");
           this.resultsArray.splice(0, this.resultsArray.length);
-          if (response.data.length < 1) {
-            this.notFound = true;
+          if (!response.data) {
+            this.error = "couldn't fetch data from the API";
           } else {
-            this.notFound = false;
-            response.data.forEach(item => {
-              const itemFilter = {
-                name: item.name,
-                symbol: item.symbol
-              };
-              this.resultsArray.push(itemFilter);
-            });
+            if (response.data.length < 1) {
+              this.notFound = true;
+            } else {
+              this.notFound = false;
+              response.data.forEach(item => {
+                const itemFilter = {
+                  name: item.name,
+                  symbol: item.symbol
+                };
+                this.resultsArray.push(itemFilter);
+              });
+            }
           }
+        })
+        .catch(() => {
+          this.$store.commit("toggleLoading");
+          this.error = "couldn't fetch data from the API";
         });
+      // const url = `https://api.worldtradingdata.com/api/v1/stock_search?search_term=${this.searchTerm}&api_token=${process.env.VUE_APP_APIKEY}&currency=EUR,USD`;
+      // fetch(url, { mode: "cors" })
+      //   .then(response => response.json())
+      // .then(response => {
+      //   this.$store.commit("toggleLoading");
+      //   this.resultsArray.splice(0, this.resultsArray.length);
+      //   if (response.data.length < 1) {
+      //     this.notFound = true;
+      //   } else {
+      //     this.notFound = false;
+      //     response.data.forEach(item => {
+      //       const itemFilter = {
+      //         name: item.name,
+      //         symbol: item.symbol
+      //       };
+      //       this.resultsArray.push(itemFilter);
+      //     });
+      //   }
+      // })
+      // .catch(() => {
+      //   this.$store.commit("toggleLoading");
+      //   this.error = "couldn't fetch data from the API";
+      // });
     },
     keydown(event) {
       if (event.key === "Enter") {

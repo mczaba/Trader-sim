@@ -48,25 +48,29 @@ export default {
   props: ["stock"],
   created: function() {
     this.$store.commit("toggleLoading");
-    fetch(
-      `https://api.worldtradingdata.com/api/v1/stock?symbol=${this.stock}&api_token=${process.env.VUE_APP_APIKEY}`
-    )
+    fetch(`${process.env.VUE_APP_API_ADRESS}/API/details/${this.stock}`, {
+      mode: "cors"
+    })
       .then(response => response.json())
       .then(response => {
-        this.price = response.data[0].price;
-        this.dayHigh = response.data[0].day_high;
-        this.dayLow = response.data[0].day_low;
-        this.name = response.data[0].name;
-        this.absoluteDayChange =
-          response.data[0].day_change > 0
-            ? `+${response.data[0].day_change}`
-            : response.data[0].day_change;
-        this.pctDayChange =
-          response.data[0].change_pct > 0
-            ? `+${response.data[0].change_pct}`
-            : response.data[0].change_pct;
-        this.currency = response.data[0].currency;
-        this.$store.commit("toggleLoading");
+        if (!response.data) {
+          this.error = "couldn't fetch data from the API";
+        } else {
+          this.price = response.data[0].price;
+          this.dayHigh = response.data[0].day_high;
+          this.dayLow = response.data[0].day_low;
+          this.name = response.data[0].name;
+          this.absoluteDayChange =
+            response.data[0].day_change > 0
+              ? `+${response.data[0].day_change}`
+              : response.data[0].day_change;
+          this.pctDayChange =
+            response.data[0].change_pct > 0
+              ? `+${response.data[0].change_pct}`
+              : response.data[0].change_pct;
+          this.currency = response.data[0].currency;
+          this.$store.commit("toggleLoading");
+        }
       })
       .catch(() => {
         this.$store.commit("toggleLoading");
@@ -79,9 +83,6 @@ export default {
 <style lang="scss" scoped>
 .details {
   margin: 0;
-}
-h2 {
-  color: var(--text-error);
 }
 img {
   margin-top: 85px;

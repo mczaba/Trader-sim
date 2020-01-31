@@ -91,7 +91,6 @@ export default {
 <style lang="scss" scoped>
 h2 {
   margin: 0;
-  color: var(--text-error);
 }
 #stockSell {
   display: flex;
