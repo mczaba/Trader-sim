@@ -124,7 +124,7 @@ input {
   margin: 40px auto 0 auto;
   display: grid;
   grid-template-columns: 2fr 1fr;
-  grid-template-rows: 170px 170px 410px;
+  grid-template-rows: 100px 170px 410px;
   grid-gap: 20px;
 }
 
