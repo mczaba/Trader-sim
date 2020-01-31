@@ -130,7 +130,9 @@ input {
   color: var(--text-color);
   background-color: var(--background-main);
   border: none;
-  border-radius: 5px;
+  flex-grow: 1;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
   padding-left: 10px;
 }
 .component {
@@ -150,10 +152,15 @@ input {
 
 .inputContainer {
   display: flex;
-  justify-content: space-between;
+  justify-content: stretch;
   align-items: stretch;
+  height: 37px;
   width: 30%;
   margin: auto;
+  button {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+  }
 }
 .stockList {
   height: calc(100% - 76px);

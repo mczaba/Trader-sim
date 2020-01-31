@@ -34,6 +34,7 @@ html {
   text-align: center;
   --text-color: #fff;
   --text-error: red;
+  --text-active: #ef5466;
   --text-headers: #fff;
   --headings-color: #fff;
   --background-main: #121216;
