@@ -6,6 +6,7 @@ import owned from "./modules/owned";
 import rate from "./modules/rate";
 import auth from "./modules/auth";
 import status from "./modules/status";
+import currentPrice from "./modules/currentPrice";
 
 Vue.use(Vuex);
 
@@ -16,7 +17,8 @@ export default new Vuex.Store({
     owned,
     rate,
     auth,
-    status
+    status,
+    currentPrice
   },
   mutations: {
     reset: state => {

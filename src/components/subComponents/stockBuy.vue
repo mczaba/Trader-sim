@@ -1,6 +1,6 @@
 <template>
-  <div id="stockbuy" v-if="!loading">
-    <div v-if="!error">
+  <div v-if="!loading">
+    <div id="stockbuy" v-if="!error">
       <div id="input">
         <button @click="remove">-</button>
         <input type="number" v-model="buyQuantity" @keydown="keydown" />
@@ -21,7 +21,6 @@ export default {
   data() {
     return {
       buyQuantity: 0,
-      price: 0,
       currency: null,
       error: null
     };
@@ -49,6 +48,9 @@ export default {
     },
     loading() {
       return this.$store.getters.loading;
+    },
+    price() {
+      return this.$store.getters.price;
     }
   },
   methods: {
@@ -76,21 +78,8 @@ export default {
       }
     }
   },
-  created: function() {
-    this.$store.commit("toggleLoading");
-    fetch(
-      `https://api.worldtradingdata.com/api/v1/stock?symbol=${this.stock}&api_token=${process.env.VUE_APP_APIKEY}`
-    )
-      .then(response => response.json())
-      .then(response => {
-        this.price = Number(response.data[0].price);
-        this.currency = response.data[0].currency;
-        this.$store.commit("toggleLoading");
-      })
-      .catch(() => {
-        this.$store.commit("toggleLoading");
-        this.error = "couldn't fetch price from the API";
-      });
+  destroyed() {
+    this.$store.commit("setPrice", null);
   }
 };
 </script>

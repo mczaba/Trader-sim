@@ -77,8 +77,13 @@ export default {
     },
     search() {
       this.$store.commit("toggleLoading");
-      fetch(`${process.env.VUE_APP_API_ADRESS}/API/search/${this.searchTerm}`)
-        .then(response => response.json())
+      fetch(`${process.env.VUE_APP_API_ADRESS}/API/search/${this.searchTerm}`, {
+        mode: "cors"
+      })
+        .then(response => {
+          console.log(response);
+          return response.json();
+        })
         .then(response => {
           this.$store.commit("toggleLoading");
           this.resultsArray.splice(0, this.resultsArray.length);
@@ -99,33 +104,11 @@ export default {
             }
           }
         })
-        .catch(() => {
+        .catch(error => {
+          console.log(error);
           this.$store.commit("toggleLoading");
           this.error = "couldn't fetch data from the API";
         });
-      // const url = `https://api.worldtradingdata.com/api/v1/stock_search?search_term=${this.searchTerm}&api_token=${process.env.VUE_APP_APIKEY}&currency=EUR,USD`;
-      // fetch(url, { mode: "cors" })
-      //   .then(response => response.json())
-      // .then(response => {
-      //   this.$store.commit("toggleLoading");
-      //   this.resultsArray.splice(0, this.resultsArray.length);
-      //   if (response.data.length < 1) {
-      //     this.notFound = true;
-      //   } else {
-      //     this.notFound = false;
-      //     response.data.forEach(item => {
-      //       const itemFilter = {
-      //         name: item.name,
-      //         symbol: item.symbol
-      //       };
-      //       this.resultsArray.push(itemFilter);
-      //     });
-      //   }
-      // })
-      // .catch(() => {
-      //   this.$store.commit("toggleLoading");
-      //   this.error = "couldn't fetch data from the API";
-      // });
     },
     keydown(event) {
       if (event.key === "Enter") {

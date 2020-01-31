@@ -57,6 +57,7 @@ export default {
           this.error = "couldn't fetch data from the API";
         } else {
           this.price = response.data[0].price;
+          this.$store.commit("setPrice", this.price);
           this.dayHigh = response.data[0].day_high;
           this.dayLow = response.data[0].day_low;
           this.name = response.data[0].name;
