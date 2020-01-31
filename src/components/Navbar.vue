@@ -90,10 +90,6 @@ export default {
     logout() {
       this.$store.commit("logOut");
       this.$store.commit("reset");
-      this.$store.dispatch("setStatus", {
-        message: "Successfully logged out",
-        status: "success"
-      });
       this.$router.push("/");
     }
   }

@@ -1,27 +1,28 @@
 const state = {
   message: "",
-  status: ""
+  loading: false
 };
 
 const getters = {
   message: () => state.message,
-  status: () => state.status
+  loading: () => state.loading
 };
 
 const mutations = {
-  setStatus: (state, payload) => {
-    state.message = payload.message;
-    state.status = payload.status;
+  setStatus: (state, message) => {
+    state.message = message;
   },
   resetStatus: state => {
     state.message = "";
-    state.status = "";
+  },
+  toggleLoading: state => {
+    state.loading = !state.loading;
   }
 };
 
 const actions = {
-  setStatus: (context, payload) => {
-    context.commit("setStatus", payload);
+  setStatus: (context, message) => {
+    context.commit("setStatus", message);
     setTimeout(() => {
       context.commit("resetStatus");
     }, 1500);

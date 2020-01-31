@@ -1,5 +1,5 @@
 <template>
-  <div class="details">
+  <div class="details" v-if="!loading">
     <transition name="fade">
       <ul class="info" v-if="display">
         <li>Name: {{ name }}</li>
@@ -22,6 +22,7 @@
       </ul>
     </transition>
   </div>
+  <img src="/load.gif" alt="" width="60px" v-else />
 </template>
 
 <script>
@@ -38,8 +39,14 @@ export default {
       currency: ""
     };
   },
+  computed: {
+    loading() {
+      return this.$store.getters.loading;
+    }
+  },
   props: ["stock"],
   created: function() {
+    this.$store.commit("toggleLoading");
     fetch(
       `https://api.worldtradingdata.com/api/v1/stock?symbol=${this.stock}&api_token=${process.env.VUE_APP_APIKEY}`
     )
@@ -59,6 +66,7 @@ export default {
             : response.data[0].change_pct;
         this.currency = response.data[0].currency;
         this.display = true;
+        this.$store.commit("toggleLoading");
       });
   }
 };
@@ -73,7 +81,9 @@ export default {
     color: var(--text-active);
   }
 }
-
+img {
+  margin-top: 85px;
+}
 ul {
   text-align: left;
   list-style: none;

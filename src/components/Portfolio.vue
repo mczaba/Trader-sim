@@ -13,7 +13,26 @@
           :class="{ active: stock === activeStock }"
           @click="changeActiveStock(stock)"
         >
-          <h2>{{ stock.symbol }} x {{ stock.quantity }}</h2>
+          <h2>
+            <span v-if="stock !== editedStock">{{
+              stock.customName || stock.symbol
+            }}</span>
+            <input
+              type="text"
+              v-model="newName"
+              v-else
+              @keydown="keydown($event, stock)"
+            />
+            x
+            {{ stock.quantity }}
+          </h2>
+          <button
+            @click.stop="editingStock(stock)"
+            v-if="stock !== editedStock"
+          >
+            Edit Name
+          </button>
+          <button @click.stop="changeName(stock)" v-else>Save Name</button>
         </div>
       </div>
     </div>
@@ -42,7 +61,9 @@ import stockSell from "./subComponents/stockSell.vue";
 export default {
   data() {
     return {
-      activeStock: null
+      activeStock: null,
+      editedStock: null,
+      newName: ""
     };
   },
   computed: {
@@ -57,6 +78,22 @@ export default {
     },
     soldOut() {
       this.activeStock = null;
+    },
+    editingStock(stock) {
+      this.editedStock = stock;
+      this.newName = stock.customName || stock.symbol;
+    },
+    keydown(event, stock) {
+      if (event.key === "Enter") {
+        this.changeName(stock);
+      }
+    },
+    changeName(stock) {
+      this.$store.dispatch("changeName", {
+        symbol: stock.symbol,
+        newName: this.newName
+      });
+      this.editedStock = null;
     }
   },
   components: {
@@ -70,6 +107,17 @@ export default {
 h1 {
   margin: 0;
   margin-bottom: 30px;
+}
+
+input {
+  background-color: inherit;
+  color: inherit;
+  border: none;
+  border-bottom: 2px solid var(--borders);
+  width: 150px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 25px;
 }
 .component {
   width: 60%;
@@ -90,6 +138,9 @@ h1 {
   overflow: auto;
 }
 .stockContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: var(--background-secondary);
   height: 80px;
   width: calc(100% - 30px);

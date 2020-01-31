@@ -31,7 +31,8 @@ const mutations = {
 };
 
 const actions = {
-  logIn: (context, payload) => {
+  logIn: ({ commit, dispatch }, payload) => {
+    commit("toggleLoading");
     fetch(`${process.env.VUE_APP_API_ADRESS}/users/login`, {
       method: "POST",
       mode: "cors",
@@ -46,42 +47,30 @@ const actions = {
     })
       .then(response => response.json())
       .then(response => {
+        commit("toggleLoading");
         if (response.message) {
-          context.commit("setLogError", response.message);
-          context.dispatch("setStatus", {
-            message: "Couldn't log in !",
-            status: "error"
-          });
+          commit("setLogError", response.message);
         } else {
-          context.commit("logIn", {
+          commit("logIn", {
             token: response.token,
             username: response.username
           });
           if (payload.signUp) {
-            context.dispatch("save");
+            dispatch("save");
           } else {
             router.push("/");
-            context.dispatch("load");
-            context.commit("setLogError", null);
-            context.dispatch("setStatus", {
-              message: "Successfully logged in !",
-              status: "success"
-            });
+            dispatch("load");
+            commit("setLogError", null);
           }
         }
       })
       .catch(() => {
-        context.dispatch("setStatus", {
-          message: "Couldn't log in : can't reach the server",
-          status: "error"
-        });
+        commit("toggleLoading");
+        dispatch("setStatus", "Couldn't log in : can't reach the server");
       });
   },
-  signUp: (context, payload) => {
-    context.commit("setStatus", {
-      message: "Signing up...",
-      status: "pending"
-    });
+  signUp: ({ commit, dispatch }, payload) => {
+    commit("toggleLoading");
     fetch(`${process.env.VUE_APP_API_ADRESS}/users/signup`, {
       mode: "cors",
       method: "post",
@@ -96,36 +85,20 @@ const actions = {
         passwordConf: payload.passwordConf
       })
     })
-      .then(response => {
-        if (response.status === 200) {
-          context.dispatch("setStatus", {
-            message: "Successfully signed up !",
-            status: "success"
-          });
-        } else {
-          context.dispatch("setStatus", {
-            message: "Couldn't sign up",
-            status: "error"
-          });
-        }
-        return response.json();
-      })
+      .then(response => response.json())
       .then(response => {
         if (response.message === "Success") {
-          context.dispatch("logIn", {
+          dispatch("logIn", {
             username: payload.username,
             password: payload.password,
             signUp: true
           });
         } else {
-          context.commit("setSignError", response.message);
+          commit("setSignError", response.message);
         }
       })
       .catch(() => {
-        context.dispatch("setStatus", {
-          message: "Couldn't sign up : can't reach the server",
-          status: "error"
-        });
+        dispatch("setStatus", "Couldn't sign up : can't reach the server");
       });
   }
 };

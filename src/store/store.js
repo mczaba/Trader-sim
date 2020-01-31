@@ -26,7 +26,7 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    buy: ({ commit, state }, payload) => {
+    buy: ({ commit, state, dispatch }, payload) => {
       if (payload.quantity < 0) {
         alert("can't buy a negative amount");
       } else {
@@ -42,10 +42,14 @@ export default new Vuex.Store({
             symbol: payload.symbol,
             quantity: payload.quantity
           });
+          dispatch(
+            "setStatus",
+            `You bought ${payload.quantity} ${payload.symbol} stocks for a total of ${totalPrice}`
+          );
         }
       }
     },
-    sell: ({ commit, getters }, payload) => {
+    sell: ({ commit, getters, dispatch }, payload) => {
       if (payload.quantity < 0) {
         alert("can't sell a negative amount");
       } else if (payload.quantity > getters.stockQuantity(payload.symbol)) {
@@ -59,13 +63,14 @@ export default new Vuex.Store({
           symbol: payload.symbol,
           quantity: payload.quantity
         });
+        const totalPrice = payload.quantity * payload.price;
+        dispatch(
+          "setStatus",
+          `You sold ${payload.quantity} ${payload.symbol} stocks for a total of ${totalPrice}`
+        );
       }
     },
-    save: ({ commit, dispatch, state }) => {
-      commit("setStatus", {
-        message: "Saving...",
-        status: "pending"
-      });
+    save: ({ dispatch, state }) => {
       fetch(`${process.env.VUE_APP_API_ADRESS}/save`, {
         method: "POST",
         mode: "cors",
@@ -83,29 +88,16 @@ export default new Vuex.Store({
         .then(response => response.json())
         .then(response => {
           if (response.status !== 200) {
-            dispatch("setStatus", {
-              message: `Couldn't save : ${response.message}`,
-              status: "error"
-            });
+            dispatch("setStatus", `Couldn't save : ${response.message}`);
           } else {
-            dispatch("setStatus", {
-              message: "Successfully saved !",
-              status: "success"
-            });
+            dispatch("setStatus", "Successfully saved !");
           }
         })
         .catch(() => {
-          dispatch("setStatus", {
-            message: "Couldn't save : can't reach the server",
-            status: "error"
-          });
+          dispatch("setStatus", "Couldn't save : can't reach the server");
         });
     },
     load: ({ commit, dispatch, state }) => {
-      commit("setStatus", {
-        message: "Loading your save...",
-        status: "pending"
-      });
       fetch(`${process.env.VUE_APP_API_ADRESS}/save`, {
         mode: "cors",
         headers: {
@@ -119,11 +111,12 @@ export default new Vuex.Store({
           commit("setFav", response.favorites);
         })
         .catch(() => {
-          dispatch("setStatus", {
-            message: "Couldn't load data : can't reach the server",
-            status: "error"
-          });
+          dispatch("setStatus", "Couldn't load data : can't reach the server");
         });
+    },
+    changeName: ({ commit }, payload) => {
+      commit("changeNameFav", payload);
+      commit("changeNameOwned", payload);
     }
   }
 });

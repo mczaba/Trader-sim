@@ -42,6 +42,18 @@ const mutations = {
   },
   setOwned: (state, owned) => {
     state.owned = [...owned];
+  },
+  changeNameOwned: (state, payload) => {
+    console.log(payload);
+    const index = state.owned
+      .map(stock => stock.symbol)
+      .indexOf(payload.symbol);
+    console.log(index);
+    if (index >= 0) {
+      console.log(state.owned[index]);
+      state.owned[index].customName = payload.newName;
+      console.log(state.owned[index]);
+    }
   }
 };
 

@@ -29,7 +29,8 @@
         class="forminput"
       />
       <br /><br />
-      <input type="submit" value="Log In" class="button" />
+      <input type="submit" value="Log In" class="button" v-if="!loading" />
+      <img src="/load.gif" alt="" width="80px" v-else />
     </form>
   </div>
 </template>
@@ -45,14 +46,13 @@ export default {
   computed: {
     error() {
       return this.$store.getters.logError;
+    },
+    loading() {
+      return this.$store.getters.loading;
     }
   },
   methods: {
     submit() {
-      this.$store.commit("setStatus", {
-        message: "Logging in...",
-        status: "pending"
-      });
       this.$store.dispatch("logIn", {
         username: this.username,
         password: this.password

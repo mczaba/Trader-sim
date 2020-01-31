@@ -1,5 +1,5 @@
 <template>
-  <div id="stockbuy">
+  <div id="stockbuy" v-if="!loading">
     <div id="input">
       <button @click="remove">-</button>
       <input type="number" v-model="buyQuantity" @keydown="keydown" />
@@ -10,6 +10,7 @@
       buy
     </button>
   </div>
+  <img src="/load.gif" alt="" width="40px" v-else />
 </template>
 
 <script>
@@ -41,6 +42,9 @@ export default {
         return true;
       }
       return false;
+    },
+    loading() {
+      return this.$store.getters.loading;
     }
   },
   methods: {
@@ -69,6 +73,7 @@ export default {
     }
   },
   created: function() {
+    this.$store.commit("toggleLoading");
     fetch(
       `https://api.worldtradingdata.com/api/v1/stock?symbol=${this.stock}&api_token=${process.env.VUE_APP_APIKEY}`
     )
@@ -76,6 +81,7 @@ export default {
       .then(response => {
         this.price = Number(response.data[0].price);
         this.currency = response.data[0].currency;
+        this.$store.commit("toggleLoading");
       });
   }
 };

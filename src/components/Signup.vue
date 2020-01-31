@@ -94,7 +94,8 @@
         </validation-observer>
         <br />
 
-        <input type="submit" value="Sign Up" class="button" />
+        <input type="submit" value="Sign Up" class="button" v-if="!loading" />
+        <img src="/load.gif" alt="" v-else />
       </form>
     </validation-observer>
   </div>
@@ -168,6 +169,9 @@ export default {
     },
     servError() {
       return this.$store.getters.signError;
+    },
+    loading() {
+      return this.$store.getters.loading;
     }
   },
   methods: {

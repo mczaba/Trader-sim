@@ -1,14 +1,7 @@
 <template>
-  <div>
+  <div :class="{ active: message }">
     <transition name="fade">
-      <h2
-        v-if="message"
-        :class="{
-          red: status === 'error',
-          green: status === 'success',
-          blue: status === 'pending'
-        }"
-      >
+      <h2 v-if="message">
         {{ message }}
       </h2>
     </transition>
@@ -20,29 +13,20 @@ export default {
   computed: {
     message() {
       return this.$store.getters.message;
-    },
-    status() {
-      return this.$store.getters.status;
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.red {
-  background-color: #dc3545;
-}
-.green {
-  background-color: #28a745;
-}
-.blue {
-  background-color: rgb(56, 67, 168);
-}
 div {
   width: 100%;
   height: 35px;
   text-align: center;
   background-color: var(--background-main);
+}
+.active {
+  background-color: var(--button);
 }
 h2 {
   color: white;

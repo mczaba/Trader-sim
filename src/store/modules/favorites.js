@@ -8,9 +8,12 @@ const getters = {
 };
 
 const mutations = {
-  addToFavorites: (state, payload) => {
-    if (!state.favorites.includes(payload.symbol)) {
-      state.favorites.push(payload.symbol);
+  addToFavorites: (state, symbol) => {
+    const index = state.favorites.map(stock => stock.symbol).indexOf(symbol);
+    if (index < 0) {
+      state.favorites.push({
+        symbol: symbol
+      });
     }
   },
   removeFromFav: (state, payload) => {
@@ -19,6 +22,14 @@ const mutations = {
   },
   setFav: (state, favorites) => {
     state.favorites = [...favorites];
+  },
+  changeNameFav: (state, payload) => {
+    const index = state.favorites
+      .map(stock => stock.symbol)
+      .indexOf(payload.symbol);
+    if (index >= 0) {
+      state.favorites[index].customName = payload.newName;
+    }
   }
 };
 
