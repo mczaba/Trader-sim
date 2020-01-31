@@ -7,8 +7,8 @@
       <router-link to="/portfolio" class="link" active-class="active"
         >Portfolio</router-link
       >
-      <router-link to="/favorites" class="link" active-class="active"
-        >Favorites</router-link
+      <router-link to="/watch-list" class="link" active-class="active"
+        >Watch List</router-link
       >
       <router-link to="/search" class="link" active-class="active"
         >Search stock</router-link
@@ -141,6 +141,7 @@ nav {
   font-weight: bold;
   text-decoration: none;
   flex-grow: 1;
+  color: var(--text-color);
   &:visited {
     color: var(--text-color);
   }

@@ -3,6 +3,7 @@
     <transition name="fade">
       <ul class="info" v-if="display">
         <li>Name: {{ name }}</li>
+        <li>Symbol: {{ stock }}</li>
         <li>Current price: {{ price }}{{ currency }}</li>
         <li v-if="dayHigh !== 'N/A'">Day High: {{ dayHigh }}{{ currency }}</li>
         <li v-if="dayLow !== 'N/A'">Day Low: {{ dayLow }}{{ currency }}</li>
@@ -77,10 +78,10 @@ ul {
   text-align: left;
   list-style: none;
   padding: 0;
-  margin-top: 40px;
+  margin-top: 30px;
   li {
     margin: 8px 0;
-    font-size: 25px;
+    font-size: 24px;
   }
 }
 

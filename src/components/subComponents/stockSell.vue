@@ -2,7 +2,7 @@
   <div id="stockSell">
     <div id="input">
       <button @click="remove">-</button>
-      <input type="number" v-model="sellQuantity" />
+      <input type="number" v-model="sellQuantity" @keydown="keydown" />
       <button @click="add">+</button>
     </div>
     <span>{{ totalPrice }}€</span>
@@ -36,11 +36,19 @@ export default {
   },
   methods: {
     sell() {
+      if (this.sellQuantity === this.stock.quantity) {
+        this.$emit("soldOut");
+      }
       this.$store.dispatch("sell", {
         symbol: this.stock.symbol,
         price: this.price,
         quantity: this.sellQuantity
       });
+    },
+    keydown(event) {
+      if (event.key === "Enter") {
+        this.sell();
+      }
     },
     add() {
       if (!(this.sellQuantity >= this.stock.quantity)) {

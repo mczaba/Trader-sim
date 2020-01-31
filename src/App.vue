@@ -43,15 +43,6 @@ html {
   --background-tertiary: #2d2d3a;
   --borders: #32323d;
   --button: #ef5466;
-  // --text-color: #fff;
-  // --text-error: red;
-  // --text-active: #43dde6;
-  // --headings-color: #fff;
-  // --background-main: #364f6b;
-  // --background-secondary: #293b4e;
-  // --background-secondary-active: #364f6b;
-  // --borders: #f0f0f0;
-  // --button: #fc5185;
   background-color: var(--background-main);
   color: var(--text-color);
 }
@@ -64,7 +55,7 @@ html {
 }
 
 #view {
-  margin-top: 55px;
+  margin-top: 30px;
 }
 
 button {
@@ -82,5 +73,13 @@ button {
     cursor: not-allowed;
     opacity: 0.5;
   }
+  &:active {
+    opacity: 0.7;
+  }
+}
+
+h1 {
+  font-size: 45px;
+  color: var(--text-headers);
 }
 </style>

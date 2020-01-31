@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import stock from "./stockSearch.vue";
+import stock from "./search/stockSearch.vue";
 
 export default {
   data() {

@@ -35,6 +35,9 @@ const mutations = {
       .indexOf(payload.symbol);
     if (state.owned[index].quantity >= payload.quantity) {
       state.owned[index].quantity -= payload.quantity;
+      if (state.owned[index].quantity === 0) {
+        state.owned.splice(index, 1);
+      }
     }
   },
   setOwned: (state, owned) => {
