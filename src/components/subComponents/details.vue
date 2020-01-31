@@ -1,7 +1,7 @@
 <template>
   <div class="details" v-if="!loading">
     <transition name="fade">
-      <ul class="info" v-if="display">
+      <ul class="info" v-if="!error">
         <li>Name: {{ name }}</li>
         <li>Symbol: {{ stock }}</li>
         <li>Current price: {{ price }}{{ currency }}</li>
@@ -20,6 +20,7 @@
           >
         </li>
       </ul>
+      <h2 v-else>{{ error }}</h2>
     </transition>
   </div>
   <img src="/load.gif" alt="" width="60px" v-else />
@@ -29,14 +30,14 @@
 export default {
   data() {
     return {
-      display: false,
       price: 0,
       dayHigh: 0,
       dayLow: 0,
       absoluteDayChange: 0,
       pctDayChange: 0,
       name: "",
-      currency: ""
+      currency: "",
+      error: null
     };
   },
   computed: {
@@ -65,8 +66,11 @@ export default {
             ? `+${response.data[0].change_pct}`
             : response.data[0].change_pct;
         this.currency = response.data[0].currency;
-        this.display = true;
         this.$store.commit("toggleLoading");
+      })
+      .catch(() => {
+        this.$store.commit("toggleLoading");
+        this.error = "couldn't fetch data from the API";
       });
   }
 };
@@ -75,11 +79,9 @@ export default {
 <style lang="scss" scoped>
 .details {
   margin: 0;
-  h1 {
-    margin: 0;
-    font-size: 45px;
-    color: var(--text-active);
-  }
+}
+h2 {
+  color: var(--text-error);
 }
 img {
   margin-top: 85px;

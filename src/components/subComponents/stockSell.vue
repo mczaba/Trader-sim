@@ -1,14 +1,17 @@
 <template>
   <div id="stockSell" v-if="!loading">
-    <div id="input">
-      <button @click="remove">-</button>
-      <input type="number" v-model="sellQuantity" @keydown="keydown" />
-      <button @click="add">+</button>
+    <div v-if="!error">
+      <div id="input">
+        <button @click="remove">-</button>
+        <input type="number" v-model="sellQuantity" @keydown="keydown" />
+        <button @click="add">+</button>
+      </div>
+      <span>{{ totalPrice }}€</span>
+      <button :disabled="sellQuantity > stock.quantity" @click="sell">
+        Sell
+      </button>
     </div>
-    <span>{{ totalPrice }}€</span>
-    <button :disabled="sellQuantity > stock.quantity" @click="sell">
-      Sell
-    </button>
+    <h2 v-else>{{ error }}</h2>
   </div>
   <img src="/load.gif" alt="" width="40px" v-else />
 </template>
@@ -19,7 +22,8 @@ export default {
     return {
       sellQuantity: 0,
       price: 0,
-      currency: null
+      currency: null,
+      error: null
     };
   },
   props: ["stock"],
@@ -75,12 +79,20 @@ export default {
         this.price = response.data[0].price;
         this.currency = response.data[0].currency;
         this.$store.commit("toggleLoading");
+      })
+      .catch(() => {
+        this.$store.commit("toggleLoading");
+        this.error = "couldn't fetch price from the API";
       });
   }
 };
 </script>
 
 <style lang="scss" scoped>
+h2 {
+  margin: 0;
+  color: var(--text-error);
+}
 #stockSell {
   display: flex;
   justify-content: space-between;
