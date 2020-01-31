@@ -81,7 +81,6 @@ export default {
         mode: "cors"
       })
         .then(response => {
-          console.log(response);
           return response.json();
         })
         .then(response => {
@@ -104,8 +103,7 @@ export default {
             }
           }
         })
-        .catch(error => {
-          console.log(error);
+        .catch(() => {
           this.$store.commit("toggleLoading");
           this.error = "couldn't fetch data from the API";
         });
