@@ -80,7 +80,6 @@ export default {
           return response.json();
         })
         .then(response => {
-          console.log(response);
           this.loading = false;
           this.resultsArray.splice(0, this.resultsArray.length);
           this.activeStock = null;
