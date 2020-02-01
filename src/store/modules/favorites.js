@@ -8,12 +8,12 @@ const getters = {
 };
 
 const mutations = {
-  addToFavorites: (state, symbol) => {
-    const index = state.favorites.map(stock => stock.symbol).indexOf(symbol);
+  addToFavorites: (state, payload) => {
+    const index = state.favorites
+      .map(stock => stock.symbol)
+      .indexOf(payload.symbol);
     if (index < 0) {
-      state.favorites.push({
-        symbol: symbol
-      });
+      state.favorites.push(payload);
     }
   },
   removeFromFav: (state, payload) => {
@@ -33,8 +33,24 @@ const mutations = {
   }
 };
 
+const actions = {
+  addToFavorites: ({ commit, rootState }, payload) => {
+    const ownedIndex = rootState.owned.owned
+      .map(stock => stock.symbol)
+      .indexOf(payload.symbol);
+    const customName = rootState.owned.owned[ownedIndex].customName;
+    if (customName) {
+      const newStock = { ...payload, customName };
+      commit("addToFavorites", newStock);
+    } else {
+      commit("addToFavorites", payload);
+    }
+  }
+};
+
 export default {
   state,
   getters,
-  mutations
+  mutations,
+  actions
 };

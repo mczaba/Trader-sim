@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="stocks container">
-      <h1>Result</h1>
+      <h1>Results</h1>
       <img src="/load.gif" alt="" v-if="loading" />
       <div v-else>
         <div class="stockList" v-if="!error">
@@ -125,7 +125,7 @@ export default {
       return "Watch";
     },
     addToFav(currentStock) {
-      this.$store.commit("addToFavorites", currentStock.symbol);
+      this.$store.dispatch("addToFavorites", { symbol: currentStock.symbol });
       this.$store.dispatch(
         "setStatus",
         `${currentStock.symbol} has been added to your watch list`
@@ -147,11 +147,11 @@ h1 {
 
 input {
   color: var(--text-color);
-  background-color: var(--background-main);
+  font-size: 15px;
+  background-color: var(--background-secondary);
   border: none;
+  border-bottom: 1px solid var(--borders);
   flex-grow: 1;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
   padding-left: 10px;
 }
 .component {
@@ -178,8 +178,7 @@ input {
   width: 30%;
   margin: auto;
   button {
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
+    margin-left: 15px;
   }
 }
 .stockList {

@@ -40,7 +40,7 @@ export default new Vuex.Store({
             price: payload.price,
             quantity: payload.quantity
           });
-          commit("addStock", {
+          dispatch("addStock", {
             symbol: payload.symbol,
             quantity: payload.quantity
           });

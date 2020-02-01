@@ -20,6 +20,7 @@
               v-model="newName"
               v-else
               @keydown="keydown($event, stock)"
+              id="nameInput"
             />
             x
             {{ stock.quantity }}
@@ -30,7 +31,13 @@
           >
             Edit Name
           </button>
-          <button @click.stop="changeName(stock)" v-else>Save Name</button>
+          <button
+            @click.stop="changeName(stock)"
+            v-else
+            v-click-outside="resetEdit"
+          >
+            Save Name
+          </button>
         </div>
       </div>
     </div>
@@ -70,6 +77,10 @@ export default {
     }
   },
   methods: {
+    resetEdit() {
+      this.editedStock = null;
+      this.newName = "";
+    },
     changeActiveStock(stock) {
       if (stock !== this.activeStock) {
         this.activeStock = null;
@@ -99,6 +110,14 @@ export default {
   components: {
     stockDetails,
     stockSell
+  },
+  updated: function() {
+    this.$nextTick(function() {
+      const nameInput = document.querySelector("#nameInput");
+      if (nameInput) {
+        nameInput.focus();
+      }
+    });
   }
 };
 </script>

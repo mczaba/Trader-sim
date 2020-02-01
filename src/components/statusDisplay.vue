@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ active: message }">
+  <div>
     <transition name="fade">
       <h2 v-if="message">
         {{ message }}
@@ -25,11 +25,10 @@ div {
   text-align: center;
   background-color: var(--background-main);
 }
-.active {
-  background-color: var(--button);
-}
+
 h2 {
   color: white;
+  background-color: var(--button);
   margin: 0;
   line-height: 35px;
   width: 100%;

@@ -20,6 +20,7 @@
               v-model="newName"
               v-else
               @keydown="keydown($event, stock)"
+              id="nameInput"
             />
           </h2>
           <div class="buttons">
@@ -30,7 +31,13 @@
             >
               Edit Name
             </button>
-            <button @click.stop="changeName(stock)" v-else>Save Name</button>
+            <button
+              @click.stop="changeName(stock)"
+              v-click-outside="resetEdit"
+              v-else
+            >
+              Save Name
+            </button>
           </div>
         </div>
       </div>
@@ -85,6 +92,10 @@ export default {
       this.editedStock = stock;
       this.newName = stock.customName || stock.symbol;
     },
+    resetEdit() {
+      this.editedStock = null;
+      this.newName = "";
+    },
     keydown(event, stock) {
       if (event.key === "Enter") {
         this.changeName(stock);
@@ -101,6 +112,14 @@ export default {
   components: {
     stockDetails,
     stockBuy
+  },
+  updated: function() {
+    this.$nextTick(function() {
+      const nameInput = document.querySelector("#nameInput");
+      if (nameInput) {
+        nameInput.focus();
+      }
+    });
   }
 };
 </script>
@@ -125,7 +144,7 @@ input {
 }
 .component {
   width: 60%;
-  margin: 40px auto 0 auto;
+  margin: 200px auto 0 auto;
   display: grid;
   grid-template-columns: 2fr 1fr;
   grid-template-rows: 100px 170px 410px;

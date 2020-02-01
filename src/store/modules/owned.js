@@ -21,10 +21,7 @@ const mutations = {
       .map(stock => stock.symbol)
       .indexOf(payload.symbol);
     if (index < 0) {
-      state.owned.push({
-        symbol: payload.symbol,
-        quantity: payload.quantity
-      });
+      state.owned.push(payload);
     } else {
       state.owned[index].quantity += payload.quantity;
     }
@@ -53,8 +50,24 @@ const mutations = {
   }
 };
 
+const actions = {
+  addStock: ({ commit, rootState }, payload) => {
+    const favIndex = rootState.favorites.favorites
+      .map(stock => stock.symbol)
+      .indexOf(payload.symbol);
+    const customName = rootState.favorites.favorites[favIndex].customName;
+    if (customName) {
+      const newStock = { ...payload, customName };
+      commit("addStock", newStock);
+    } else {
+      commit("addStock", payload);
+    }
+  }
+};
+
 export default {
   state,
   getters,
-  mutations
+  mutations,
+  actions
 };
