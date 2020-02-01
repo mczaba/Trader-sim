@@ -1,10 +1,8 @@
 <template>
   <div class="component">
-    <div class="summary container">
-      <h1>Your Portfolio</h1>
-    </div>
+    <h1 class="summary container">Your Portfolio</h1>
     <div class="stocks container">
-      <h1>Your stocks</h1>
+      <h1>Stocks</h1>
       <div class="stockList">
         <div
           class="stockContainer"
@@ -127,12 +125,13 @@ input {
   display: grid;
   grid-template-columns: 2fr 1fr;
   grid-template-rows: 100px 170px 410px;
-  grid-gap: 20px;
+  border: 1px solid var(--borders);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .container {
   background-color: var(--background-secondary);
-  border-radius: 10px;
   padding: 25px 15px;
 }
 .stockList {
@@ -180,16 +179,20 @@ input {
 .summary {
   grid-column: 1/ 3;
   grid-row: 1 / 2;
+  border-bottom: 1px solid var(--borders);
+  margin: 0;
 }
 
 .stocks {
   grid-column: 1 / 2;
   grid-row: 2 / 4;
+  border-right: 1px solid var(--borders);
 }
 
 .actions {
   grid-column: 2 / 3;
   grid-row: 2 / 3;
+  border-bottom: 1px solid var(--borders);
 }
 
 .details {

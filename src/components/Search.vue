@@ -32,7 +32,6 @@
               {{ favoriteButtonText(stock) }}
             </button>
           </div>
-          <h2 v-if="notFound">No stock found for you research</h2>
         </div>
         <h2 v-else>{{ error }}</h2>
       </div>
@@ -60,15 +59,10 @@ export default {
     return {
       searchTerm: "",
       resultsArray: [],
-      notFound: false,
       activeStock: null,
-      error: null
+      error: null,
+      loading: false
     };
-  },
-  computed: {
-    loading() {
-      return this.$store.getters.loading;
-    }
   },
   methods: {
     changeActiveStock(stock) {
@@ -78,7 +72,7 @@ export default {
       }
     },
     search() {
-      this.$store.commit("toggleLoading");
+      this.loading = true;
       fetch(`${process.env.VUE_APP_API_ADRESS}/API/search/${this.searchTerm}`, {
         mode: "cors"
       })
@@ -86,28 +80,28 @@ export default {
           return response.json();
         })
         .then(response => {
-          this.$store.commit("toggleLoading");
+          console.log(response);
+          this.loading = false;
           this.resultsArray.splice(0, this.resultsArray.length);
+          this.activeStock = null;
           if (!response.data) {
-            this.error = "couldn't fetch data from the API";
+            this.error = response.message;
+          } else if (response.data.length < 1) {
+            this.error = "No results found for your research";
           } else {
-            if (response.data.length < 1) {
-              this.notFound = true;
-            } else {
-              this.notFound = false;
-              response.data.forEach(item => {
-                const itemFilter = {
-                  name: item.name,
-                  symbol: item.symbol
-                };
-                this.resultsArray.push(itemFilter);
-              });
-            }
+            this.notFound = false;
+            response.data.forEach(item => {
+              const itemFilter = {
+                name: item.name,
+                symbol: item.symbol
+              };
+              this.resultsArray.push(itemFilter);
+            });
           }
         })
         .catch(() => {
-          this.$store.commit("toggleLoading");
-          this.error = "couldn't fetch data from the API";
+          this.loading = false;
+          this.error = "an error occured trying to reach the API";
         });
     },
     keydown(event) {
@@ -166,12 +160,13 @@ input {
   display: grid;
   grid-template-columns: 2fr 1fr;
   grid-template-rows: 170px 170px 410px;
-  grid-gap: 20px;
+  border: 1px solid var(--borders);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .container {
   background-color: var(--background-secondary);
-  border-radius: 10px;
   padding: 25px 15px;
 }
 
@@ -232,16 +227,19 @@ input {
 .summary {
   grid-column: 1/ 3;
   grid-row: 1 / 2;
+  border-bottom: 1px solid var(--borders);
 }
 
 .stocks {
   grid-column: 1 / 2;
   grid-row: 2 / 4;
+  border-right: 1px solid var(--borders);
 }
 
 .actions {
   grid-column: 2 / 3;
   grid-row: 2 / 3;
+  border-bottom: 1px solid var(--borders);
 }
 
 .details {
