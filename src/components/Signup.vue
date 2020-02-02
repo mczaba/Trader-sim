@@ -7,11 +7,11 @@
       <form
         action=""
         method="POST"
-        @submit.prevent="handleSubmit(checkForm)"
+        @submit.prevent="handleSubmit(submitForm)"
         novalidate
       >
         <h1>Sign Up</h1>
-        <p v-if="servError" class="serverError">{{ servError }}</p>
+        <p v-if="error" class="serverError">{{ error }}</p>
         <transition name="slide">
           <p class="label" v-if="username">username</p>
         </transition>
@@ -109,6 +109,7 @@ import {
   setInteractionMode
 } from "vee-validate";
 import { required } from "vee-validate/dist/rules";
+import { loadingMixin } from "../assets/mixins";
 
 setInteractionMode("eager");
 
@@ -156,9 +157,11 @@ export default {
       username: "",
       email: "",
       password: "",
-      passwordConf: ""
+      passwordConf: "",
+      error: null
     };
   },
+  mixins: [loadingMixin],
   components: {
     ValidationProvider,
     ValidationObserver
@@ -166,26 +169,66 @@ export default {
   computed: {
     LoggedInName() {
       return this.$store.getters.username;
-    },
-    servError() {
-      return this.$store.getters.signError;
-    },
-    loading() {
-      return this.$store.getters.loading;
     }
   },
   methods: {
-    checkForm() {
-      this.$store.dispatch("signUp", {
-        username: this.username,
-        email: this.email,
-        password: this.password,
-        passwordConf: this.password
-      });
+    submitForm() {
+      this.toggleLoading();
+      // send sign up request
+      fetch(`${process.env.VUE_APP_API_ADRESS}/users/signup`, {
+        mode: "cors",
+        method: "post",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username: this.username,
+          email: this.email,
+          password: this.password,
+          passwordConf: this.passwordConf
+        })
+      })
+        .then(response => response.json())
+        .then(response => {
+          if (response.message === "Success") {
+            // is successful sign up, login the user with the credentials
+            fetch(`${process.env.VUE_APP_API_ADRESS}/users/login`, {
+              method: "POST",
+              mode: "cors",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                username: this.username,
+                password: this.password
+              })
+            })
+              .then(response => response.json())
+              .then(response => {
+                this.toggleLoading();
+                this.$store.commit("logIn", {
+                  token: response.token,
+                  username: response.username
+                });
+                // if login was successful, creates a save for the user
+                this.$store.dispatch("save");
+                this.error = null;
+              });
+          } else {
+            this.toggleLoading();
+            this.error = response.message;
+          }
+        })
+        .catch(() => {
+          this.toggleLoading();
+          this.$store.dispatch(
+            "setStatus",
+            "Couldn't sign up : can't reach the server"
+          );
+        });
     }
-  },
-  destroyed() {
-    this.$store.commit("setSignError", null);
   }
 };
 </script>

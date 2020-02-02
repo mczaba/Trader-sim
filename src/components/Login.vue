@@ -1,10 +1,6 @@
 <template>
   <div>
-    <form
-      action="http://localhost:50/users/login"
-      method="POST"
-      @submit.prevent="submit"
-    >
+    <form action="" method="POST" @submit.prevent="submit">
       <h1>Login</h1>
       <p v-if="error" class="error">{{ error }}</p>
       <transition name="slide">
@@ -36,31 +32,54 @@
 </template>
 
 <script>
+import { loadingMixin } from "../assets/mixins";
 export default {
   data() {
     return {
       username: "",
-      password: ""
+      password: "",
+      error: null
     };
   },
-  computed: {
-    error() {
-      return this.$store.getters.logError;
-    },
-    loading() {
-      return this.$store.getters.loading;
-    }
-  },
+  mixins: [loadingMixin],
   methods: {
     submit() {
-      this.$store.dispatch("logIn", {
-        username: this.username,
-        password: this.password
-      });
+      this.toggleLoading();
+      fetch(`${process.env.VUE_APP_API_ADRESS}/users/login`, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username: this.username,
+          password: this.password
+        })
+      })
+        .then(response => response.json())
+        .then(response => {
+          this.toggleLoading();
+          if (response.message) {
+            this.error = response.message;
+          } else {
+            this.$store.commit("logIn", {
+              token: response.token,
+              username: response.username
+            });
+            this.$router.push("/");
+            this.$store.dispatch("load");
+            this.error = null;
+          }
+        })
+        .catch(() => {
+          this.toggleLoading();
+          this.$store.dispatch(
+            "setStatus",
+            "Couldn't sign up : can't reach the server"
+          );
+        });
     }
-  },
-  destroyed() {
-    this.$store.commit("setLogError", null);
   }
 };
 </script>
