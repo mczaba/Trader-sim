@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!loading">
+  <div v-if="price">
     <div id="stockSell" v-if="!error">
       <div id="input">
         <button @click="remove">-</button>
@@ -36,9 +36,6 @@ export default {
         );
       }
       return this.sellQuantity * this.price;
-    },
-    loading() {
-      return this.$store.getters.loading;
     },
     price() {
       return this.$store.getters.price;

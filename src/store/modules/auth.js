@@ -45,7 +45,9 @@ const actions = {
         password: payload.password
       })
     })
-      .then(response => response.json())
+      .then(response => {
+        return response.json();
+      })
       .then(response => {
         commit("toggleLoading");
         if (response.message) {

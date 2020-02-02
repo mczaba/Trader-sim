@@ -59,27 +59,16 @@
 <script>
 import stockDetails from "./subComponents/details.vue";
 import stockBuy from "./subComponents/stockBuy.vue";
+import { editStock, activeStock } from "../assets/mixins";
 
 export default {
-  data() {
-    return {
-      activeStock: null,
-      editedStock: null,
-      newName: ""
-    };
-  },
+  mixins: [editStock, activeStock],
   computed: {
     favorites() {
       return this.$store.getters.favorites;
     }
   },
   methods: {
-    changeActiveStock(stock) {
-      if (stock !== this.activeStock) {
-        this.activeStock = null;
-        setTimeout(() => (this.activeStock = stock), 1);
-      }
-    },
     removeFromFav(stock) {
       const name = stock.customName || stock.symbol;
       this.$store.commit("removeFromFav", stock);
@@ -87,39 +76,11 @@ export default {
         "setStatus",
         `${name} has been removed from your watch list`
       );
-    },
-    editingStock(stock) {
-      this.editedStock = stock;
-      this.newName = stock.customName || stock.symbol;
-    },
-    resetEdit() {
-      this.editedStock = null;
-      this.newName = "";
-    },
-    keydown(event, stock) {
-      if (event.key === "Enter") {
-        this.changeName(stock);
-      }
-    },
-    changeName(stock) {
-      this.$store.dispatch("changeName", {
-        symbol: stock.symbol,
-        newName: this.newName
-      });
-      this.editedStock = null;
     }
   },
   components: {
     stockDetails,
     stockBuy
-  },
-  updated: function() {
-    this.$nextTick(function() {
-      const nameInput = document.querySelector("#nameInput");
-      if (nameInput) {
-        nameInput.focus();
-      }
-    });
   }
 };
 </script>

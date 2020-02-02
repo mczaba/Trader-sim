@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import { loadingMixin } from "../../assets/mixins";
+
 export default {
   data() {
     return {
@@ -40,14 +42,10 @@ export default {
       error: null
     };
   },
-  computed: {
-    loading() {
-      return this.$store.getters.loading;
-    }
-  },
+  mixins: [loadingMixin],
   props: ["stock"],
   created: function() {
-    this.$store.commit("toggleLoading");
+    this.toggleLoading();
     fetch(`${process.env.VUE_APP_API_ADRESS}/API/details/${this.stock}`, {
       mode: "cors"
     })
@@ -70,11 +68,11 @@ export default {
               ? `+${response.data[0].change_pct}`
               : response.data[0].change_pct;
           this.currency = response.data[0].currency;
-          this.$store.commit("toggleLoading");
+          this.toggleLoading();
         }
       })
       .catch(() => {
-        this.$store.commit("toggleLoading");
+        this.toggleLoading();
         this.error = "couldn't fetch data from the API";
       });
   }

@@ -62,25 +62,21 @@
 <script>
 import stockDetails from "./subComponents/details.vue";
 import stockSell from "./subComponents/stockSell.vue";
+import { editStock } from "../assets/mixins";
 
 export default {
   data() {
     return {
-      activeStock: null,
-      editedStock: null,
-      newName: ""
+      activeStock: null
     };
   },
+  mixins: [editStock],
   computed: {
     owned() {
       return this.$store.getters.owned;
     }
   },
   methods: {
-    resetEdit() {
-      this.editedStock = null;
-      this.newName = "";
-    },
     changeActiveStock(stock) {
       if (stock !== this.activeStock) {
         this.activeStock = null;
@@ -89,35 +85,11 @@ export default {
     },
     soldOut() {
       this.activeStock = null;
-    },
-    editingStock(stock) {
-      this.editedStock = stock;
-      this.newName = stock.customName || stock.symbol;
-    },
-    keydown(event, stock) {
-      if (event.key === "Enter") {
-        this.changeName(stock);
-      }
-    },
-    changeName(stock) {
-      this.$store.dispatch("changeName", {
-        symbol: stock.symbol,
-        newName: this.newName
-      });
-      this.editedStock = null;
     }
   },
   components: {
     stockDetails,
     stockSell
-  },
-  updated: function() {
-    this.$nextTick(function() {
-      const nameInput = document.querySelector("#nameInput");
-      if (nameInput) {
-        nameInput.focus();
-      }
-    });
   }
 };
 </script>

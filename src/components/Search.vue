@@ -53,26 +53,20 @@
 <script>
 import stockDetails from "./subComponents/details.vue";
 import stockBuy from "./subComponents/stockBuy.vue";
+import { loadingMixin, activeStock } from "../assets/mixins";
 
 export default {
   data() {
     return {
       searchTerm: "",
       resultsArray: [],
-      activeStock: null,
-      error: null,
-      loading: false
+      error: null
     };
   },
+  mixins: [loadingMixin, activeStock],
   methods: {
-    changeActiveStock(stock) {
-      if (stock !== this.activeStock) {
-        this.activeStock = null;
-        setTimeout(() => (this.activeStock = stock), 1);
-      }
-    },
     search() {
-      this.loading = true;
+      this.toggleLoading();
       fetch(`${process.env.VUE_APP_API_ADRESS}/API/search/${this.searchTerm}`, {
         mode: "cors"
       })
@@ -80,7 +74,7 @@ export default {
           return response.json();
         })
         .then(response => {
-          this.loading = false;
+          this.toggleLoading();
           this.resultsArray.splice(0, this.resultsArray.length);
           this.activeStock = null;
           if (!response.data) {
@@ -99,7 +93,7 @@ export default {
           }
         })
         .catch(() => {
-          this.loading = false;
+          this.toggleLoading();
           this.error = "an error occured trying to reach the API";
         });
     },

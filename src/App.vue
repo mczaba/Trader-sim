@@ -36,11 +36,9 @@ html {
   --text-error: red;
   --text-active: #ef5466;
   --text-headers: #fff;
-  --headings-color: #fff;
   --background-main: #121216;
   --background-secondary: #23232d;
   --background-secondary-active: #191922;
-  --background-tertiary: #2d2d3a;
   --borders: #32323d;
   --button: #ef5466;
   background-color: var(--background-main);
