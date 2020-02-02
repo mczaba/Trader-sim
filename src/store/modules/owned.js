@@ -55,10 +55,14 @@ const actions = {
     const favIndex = rootState.favorites.favorites
       .map(stock => stock.symbol)
       .indexOf(payload.symbol);
-    const customName = rootState.favorites.favorites[favIndex].customName;
-    if (customName) {
-      const newStock = { ...payload, customName };
-      commit("addStock", newStock);
+    if (favIndex >= 0) {
+      const customName = rootState.favorites.favorites[favIndex].customName;
+      if (customName) {
+        const newStock = { ...payload, customName };
+        commit("addStock", newStock);
+      } else {
+        commit("addStock", payload);
+      }
     } else {
       commit("addStock", payload);
     }

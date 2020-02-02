@@ -11,45 +11,6 @@ export const loadingMixin = {
   }
 };
 
-export const editStock = {
-  data() {
-    return {
-      editedStock: null,
-      newName: ""
-    };
-  },
-  methods: {
-    editingStock(stock) {
-      this.editedStock = stock;
-      this.newName = stock.customName || stock.symbol;
-    },
-    resetEdit() {
-      this.editedStock = null;
-      this.newName = "";
-    },
-    keydown(event, stock) {
-      if (event.key === "Enter") {
-        this.changeName(stock);
-      }
-    },
-    changeName(stock) {
-      this.$store.dispatch("changeName", {
-        symbol: stock.symbol,
-        newName: this.newName
-      });
-      this.editedStock = null;
-    }
-  },
-  updated: function() {
-    this.$nextTick(function() {
-      const nameInput = document.querySelector("#nameInput");
-      if (nameInput) {
-        nameInput.focus();
-      }
-    });
-  }
-};
-
 export const activeStock = {
   data() {
     return {
@@ -63,5 +24,44 @@ export const activeStock = {
         setTimeout(() => (this.activeStock = stock), 1);
       }
     }
+  }
+};
+
+export const editStock = {
+  data() {
+    return {
+      editing: false,
+      newName: ""
+    };
+  },
+  methods: {
+    editingStock() {
+      this.editing = true;
+      this.newName = this.stock.customName || this.stock.symbol;
+    },
+    resetEdit() {
+      this.editedStock = false;
+      this.newName = "";
+    },
+    keydown(event) {
+      if (event.key === "Enter") {
+        this.changeName();
+      }
+    },
+    changeName() {
+      this.$store.dispatch("changeName", {
+        symbol: this.stock.symbol,
+        newName: this.newName
+      });
+      this.editing = false;
+    }
+  },
+  updated: function() {
+    this.$nextTick(function() {
+      const nameInput = document.querySelector("#nameInput");
+      if (nameInput) {
+        nameInput.focus();
+      }
+    });
   }
 };

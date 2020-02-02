@@ -38,10 +38,14 @@ const actions = {
     const ownedIndex = rootState.owned.owned
       .map(stock => stock.symbol)
       .indexOf(payload.symbol);
-    const customName = rootState.owned.owned[ownedIndex].customName;
-    if (customName) {
-      const newStock = { ...payload, customName };
-      commit("addToFavorites", newStock);
+    if (ownedIndex >= 0) {
+      const customName = rootState.owned.owned[ownedIndex].customName;
+      if (customName) {
+        const newStock = { ...payload, customName };
+        commit("addToFavorites", newStock);
+      } else {
+        commit("addToFavorites", payload);
+      }
     } else {
       commit("addToFavorites", payload);
     }

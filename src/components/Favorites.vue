@@ -4,42 +4,14 @@
     <div class="stocks container">
       <h1>Stocks</h1>
       <div class="stockList">
-        <div
-          class="stockContainer"
+        <stock-component
           v-for="stock in favorites"
           :key="stock.symbol"
           :class="{ active: stock === activeStock }"
-          @click="changeActiveStock(stock)"
+          @click.native="changeActiveStock(stock)"
+          :stock="stock"
         >
-          <h2>
-            <span v-if="stock !== editedStock">{{
-              stock.customName || stock.symbol
-            }}</span>
-            <input
-              type="text"
-              v-model="newName"
-              v-else
-              @keydown="keydown($event, stock)"
-              id="nameInput"
-            />
-          </h2>
-          <div class="buttons">
-            <button @click.stop="removeFromFav(stock)">Unwatch</button>
-            <button
-              @click.stop="editingStock(stock)"
-              v-if="stock !== editedStock"
-            >
-              Edit Name
-            </button>
-            <button
-              @click.stop="changeName(stock)"
-              v-click-outside="resetEdit"
-              v-else
-            >
-              Save Name
-            </button>
-          </div>
-        </div>
+        </stock-component>
       </div>
     </div>
     <div class="actions container">
@@ -59,28 +31,20 @@
 <script>
 import stockDetails from "./subComponents/details.vue";
 import stockBuy from "./subComponents/stockBuy.vue";
-import { editStock, activeStock } from "../assets/mixins";
+import stockComponent from "./subComponents/stockWatch.vue";
+import { activeStock } from "../assets/mixins";
 
 export default {
-  mixins: [editStock, activeStock],
+  mixins: [activeStock],
   computed: {
     favorites() {
       return this.$store.getters.favorites;
     }
   },
-  methods: {
-    removeFromFav(stock) {
-      const name = stock.customName || stock.symbol;
-      this.$store.commit("removeFromFav", stock);
-      this.$store.dispatch(
-        "setStatus",
-        `${name} has been removed from your watch list`
-      );
-    }
-  },
   components: {
     stockDetails,
-    stockBuy
+    stockBuy,
+    stockComponent
   }
 };
 </script>
@@ -89,19 +53,6 @@ export default {
 h1 {
   margin: 0;
   margin-bottom: 30px;
-}
-button {
-  margin-left: 10px;
-}
-input {
-  background-color: inherit;
-  color: inherit;
-  border: none;
-  border-bottom: 2px solid var(--borders);
-  width: 150px;
-  height: 40px;
-  line-height: 40px;
-  font-size: 25px;
 }
 .component {
   width: 60%;
@@ -121,34 +72,6 @@ input {
 .stockList {
   height: calc(100% - 76px);
   overflow: auto;
-}
-.stockContainer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--background-secondary);
-  height: 80px;
-  width: calc(100% - 30px);
-  margin: auto;
-  text-align: left;
-  padding: 0 15px 0 15px;
-  border-bottom: 1px solid var(--borders);
-  cursor: pointer;
-  h2 {
-    line-height: 80px;
-    margin: 0;
-  }
-  &:last-child {
-    border: none;
-  }
-  &:hover {
-    background-color: var(--background-secondary-active);
-    border: none;
-    border-radius: 8px;
-    & + .stockContainer {
-      border-top: 1px solid var(--borders);
-    }
-  }
 }
 
 .active {

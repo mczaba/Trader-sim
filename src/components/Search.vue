@@ -17,21 +17,13 @@
       <img src="/load.gif" alt="" v-if="loading" />
       <div v-else>
         <div class="stockList" v-if="!error">
-          <div
-            class="stockContainer"
+          <stock-component
             v-for="stock in resultsArray"
             :key="stock.symbol"
             :class="{ active: stock === activeStock }"
-            @click="changeActiveStock(stock)"
-          >
-            <h2>{{ stock.symbol }} ({{ stock.name }})</h2>
-            <button
-              :disabled="isInFavorites(stock)"
-              @click.stop="addToFav(stock)"
-            >
-              {{ favoriteButtonText(stock) }}
-            </button>
-          </div>
+            @click.native="changeActiveStock(stock)"
+            :stock="stock"
+          ></stock-component>
         </div>
         <h2 v-else>{{ error }}</h2>
       </div>
@@ -53,6 +45,7 @@
 <script>
 import stockDetails from "./subComponents/details.vue";
 import stockBuy from "./subComponents/stockBuy.vue";
+import stockComponent from "./subComponents/stockSearch.vue";
 import { loadingMixin, activeStock } from "../assets/mixins";
 
 export default {
@@ -101,33 +94,12 @@ export default {
       if (event.key === "Enter") {
         this.search();
       }
-    },
-    isInFavorites(currentStock) {
-      const index = this.$store.getters.favorites
-        .map(stock => stock.symbol)
-        .indexOf(currentStock.symbol);
-      if (index < 0) {
-        return false;
-      }
-      return true;
-    },
-    favoriteButtonText(currentStock) {
-      if (this.isInFavorites(currentStock)) {
-        return "Watched";
-      }
-      return "Watch";
-    },
-    addToFav(currentStock) {
-      this.$store.dispatch("addToFavorites", { symbol: currentStock.symbol });
-      this.$store.dispatch(
-        "setStatus",
-        `${currentStock.symbol} has been added to your watch list`
-      );
     }
   },
   components: {
     stockDetails,
-    stockBuy
+    stockBuy,
+    stockComponent
   }
 };
 </script>
@@ -177,34 +149,6 @@ input {
 .stockList {
   height: calc(100% - 76px);
   overflow: auto;
-}
-.stockContainer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--background-secondary);
-  height: 80px;
-  width: calc(100% - 30px);
-  margin: auto;
-  text-align: left;
-  padding: 0 15px 0 15px;
-  border-bottom: 1px solid var(--borders);
-  cursor: pointer;
-  h2 {
-    line-height: 80px;
-    margin: 0;
-  }
-  &:last-child {
-    border: none;
-  }
-  &:hover {
-    background-color: var(--background-secondary-active);
-    border: none;
-    border-radius: 8px;
-    & + .stockContainer {
-      border-top: 1px solid var(--borders);
-    }
-  }
 }
 
 .active {

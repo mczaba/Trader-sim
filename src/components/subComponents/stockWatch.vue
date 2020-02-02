@@ -6,18 +6,19 @@
         type="text"
         v-model="newName"
         v-else
-        @keydown="keydown"
+        @keydown="keydown($event, stock)"
         id="nameInput"
       />
-      x
-      {{ stock.quantity }}
     </h2>
-    <button @click.stop="editingStock" v-if="!editing">
-      Edit Name
-    </button>
-    <button @click.stop="changeName" v-else v-click-outside="resetEdit">
-      Save Name
-    </button>
+    <div class="buttons">
+      <button @click.stop="removeFromFav">Unwatch</button>
+      <button @click.stop="editingStock" v-if="!editing">
+        Edit Name
+      </button>
+      <button @click.stop="changeName" v-click-outside="resetEdit" v-else>
+        Save Name
+      </button>
+    </div>
   </div>
 </template>
 
@@ -26,11 +27,25 @@ import { editStock } from "../../assets/mixins";
 
 export default {
   mixins: [editStock],
-  props: ["stock"]
+  props: ["stock"],
+  methods: {
+    removeFromFav() {
+      const name = this.stock.customName || this.stock.symbol;
+      this.$store.commit("removeFromFav", this.stock);
+      this.$store.dispatch(
+        "setStatus",
+        `${name} has been removed from your watch list`
+      );
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
+button {
+  margin-left: 10px;
+}
+
 .stockContainer {
   display: flex;
   justify-content: space-between;

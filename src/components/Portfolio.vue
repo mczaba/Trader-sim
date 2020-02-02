@@ -4,41 +4,14 @@
     <div class="stocks container">
       <h1>Stocks</h1>
       <div class="stockList">
-        <div
-          class="stockContainer"
+        <stock-component
           v-for="stock in owned"
           :key="stock.symbol"
           :class="{ active: stock === activeStock }"
-          @click="changeActiveStock(stock)"
+          @click.native="changeActiveStock(stock)"
+          :stock="stock"
         >
-          <h2>
-            <span v-if="stock !== editedStock">{{
-              stock.customName || stock.symbol
-            }}</span>
-            <input
-              type="text"
-              v-model="newName"
-              v-else
-              @keydown="keydown($event, stock)"
-              id="nameInput"
-            />
-            x
-            {{ stock.quantity }}
-          </h2>
-          <button
-            @click.stop="editingStock(stock)"
-            v-if="stock !== editedStock"
-          >
-            Edit Name
-          </button>
-          <button
-            @click.stop="changeName(stock)"
-            v-else
-            v-click-outside="resetEdit"
-          >
-            Save Name
-          </button>
-        </div>
+        </stock-component>
       </div>
     </div>
     <div class="actions container">
@@ -62,7 +35,7 @@
 <script>
 import stockDetails from "./subComponents/details.vue";
 import stockSell from "./subComponents/stockSell.vue";
-import { editStock } from "../assets/mixins";
+import stockComponent from "./subComponents/stockFolio.vue";
 
 export default {
   data() {
@@ -70,7 +43,6 @@ export default {
       activeStock: null
     };
   },
-  mixins: [editStock],
   computed: {
     owned() {
       return this.$store.getters.owned;
@@ -78,6 +50,7 @@ export default {
   },
   methods: {
     changeActiveStock(stock) {
+      console.log("click");
       if (stock !== this.activeStock) {
         this.activeStock = null;
         setTimeout(() => (this.activeStock = stock), 1);
@@ -89,7 +62,8 @@ export default {
   },
   components: {
     stockDetails,
-    stockSell
+    stockSell,
+    stockComponent
   }
 };
 </script>
@@ -100,16 +74,6 @@ h1 {
   margin-bottom: 30px;
 }
 
-input {
-  background-color: inherit;
-  color: inherit;
-  border: none;
-  border-bottom: 2px solid var(--borders);
-  width: 150px;
-  height: 40px;
-  line-height: 40px;
-  font-size: 25px;
-}
 .component {
   width: 60%;
   margin: 40px auto 0 auto;
@@ -128,34 +92,6 @@ input {
 .stockList {
   height: calc(100% - 76px);
   overflow: auto;
-}
-.stockContainer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--background-secondary);
-  height: 80px;
-  width: calc(100% - 30px);
-  margin: auto;
-  text-align: left;
-  padding: 0 15px 0 15px;
-  border-bottom: 1px solid var(--borders);
-  cursor: pointer;
-  h2 {
-    line-height: 80px;
-    margin: 0;
-  }
-  &:last-child {
-    border: none;
-  }
-  &:hover {
-    background-color: var(--background-secondary-active);
-    border: none;
-    border-radius: 8px;
-    & + .stockContainer {
-      border-top: 1px solid var(--borders);
-    }
-  }
 }
 
 .active {
