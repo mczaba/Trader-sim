@@ -32,15 +32,13 @@ export default {
       })
         .then(response => response.json())
         .then(response => {
-          console.log(response);
           this.$store.commit("logIn", {
             token: response.token,
             username: response.username
           });
           this.$store.dispatch("load");
         })
-        .catch(error => {
-          console.log(error);
+        .catch(() => {
           this.$store.dispatch(
             "setStatus",
             "Couldn't log in : can't reach the server"
