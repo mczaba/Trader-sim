@@ -50,7 +50,6 @@ export default {
   },
   methods: {
     changeActiveStock(stock) {
-      console.log("click");
       if (stock !== this.activeStock) {
         this.activeStock = null;
         setTimeout(() => (this.activeStock = stock), 1);

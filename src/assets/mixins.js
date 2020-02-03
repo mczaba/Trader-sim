@@ -39,9 +39,12 @@ export const editStock = {
       this.editing = true;
       this.newName = this.stock.customName || this.stock.symbol;
     },
-    resetEdit() {
-      this.editedStock = false;
-      this.newName = "";
+    resetEdit(event) {
+      const nameInput = document.querySelector("#nameInput");
+      if (event.target !== nameInput) {
+        this.editing = false;
+        this.newName = "";
+      }
     },
     keydown(event) {
       if (event.key === "Enter") {

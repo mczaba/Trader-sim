@@ -21,6 +21,32 @@ export default {
     fetch(`${process.env.VUE_APP_API_ADRESS}`, {
       mode: "cors"
     });
+    if (this.$store.getters.token) {
+      fetch(`${process.env.VUE_APP_API_ADRESS}/users/refresh`, {
+        mode: "cors",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${this.$store.getters.token}`,
+          "Content-Type": "application/json"
+        }
+      })
+        .then(response => response.json())
+        .then(response => {
+          console.log(response);
+          this.$store.commit("logIn", {
+            token: response.token,
+            username: response.username
+          });
+          this.$store.dispatch("load");
+        })
+        .catch(error => {
+          console.log(error);
+          this.$store.dispatch(
+            "setStatus",
+            "Couldn't log in : can't reach the server"
+          );
+        });
+    }
   }
 };
 </script>
@@ -77,7 +103,7 @@ button {
 }
 
 h1 {
-  font-size: 45px;
+  font-size: 35px;
   color: var(--text-headers);
 }
 </style>

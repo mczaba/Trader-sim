@@ -7,6 +7,7 @@
         v-model="newName"
         v-else
         @keydown="keydown"
+        @click.stop=""
         id="nameInput"
       />
       x

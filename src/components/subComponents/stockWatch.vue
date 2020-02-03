@@ -6,7 +6,8 @@
         type="text"
         v-model="newName"
         v-else
-        @keydown="keydown($event, stock)"
+        @keydown="keydown"
+        @click.stop=""
         id="nameInput"
       />
     </h2>

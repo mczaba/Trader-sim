@@ -1,22 +1,23 @@
 const state = {
-  token: "",
-  username: null,
-  signError: null
+  token: localStorage.getItem("token") || null,
+  username: null
 };
 
 const getters = {
   username: () => state.username,
-  signError: () => state.signError
+  token: () => state.token
 };
 
 const mutations = {
   logIn: (state, payload) => {
     state.token = payload.token;
     state.username = payload.username;
+    localStorage.setItem("token", payload.token);
   },
   logOut: state => {
     state.token = "";
     state.username = null;
+    localStorage.removeItem("token");
   },
   setSignError: (state, error) => {
     state.signError = error;
