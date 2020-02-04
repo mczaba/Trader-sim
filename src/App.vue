@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <navbar v-if="!mobileView"></navbar>
-    <mobile-navbar v-else></mobile-navbar>
+    <mobile-navbar v-else id="navbar"></mobile-navbar>
     <status-display id="statusDisplay"></status-display>
     <router-view id="view"></router-view>
   </div>
@@ -24,7 +24,7 @@ export default {
   },
   computed: {
     mobileView() {
-      return this.windowWidth < 1000;
+      return this.windowWidth < 975;
     }
   },
   mounted() {
@@ -116,5 +116,24 @@ button {
 h1 {
   font-size: 35px;
   color: var(--text-headers);
+}
+
+@media screen and (max-width: 975px) {
+  #navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+  }
+
+  #statusDisplay {
+    position: fixed;
+    top: 82px;
+    z-index: 2;
+  }
+
+  #view {
+    margin-top: 90px;
+  }
 }
 </style>

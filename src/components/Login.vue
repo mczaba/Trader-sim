@@ -140,4 +140,10 @@ form {
   transform: translateY(2px);
   font-size: 16px;
 }
+
+@media screen and (max-width: 975px) {
+  form {
+    margin-top: 150px;
+  }
+}
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <h1 v-if="LoggedInName" style="text-align: center">
+  <h1 v-if="LoggedInName" style="text-align: center" class="success">
     Congratulations {{ LoggedInName }} your account is now created
   </h1>
   <div v-else>
@@ -15,7 +15,7 @@
         <transition name="slide">
           <p class="label" v-if="username">username</p>
         </transition>
-        <validation-provider rules="min:4|required" v-slot="{ errors }">
+        <validation-provider rules="min:6|required" v-slot="{ errors }">
           <input
             type="text"
             name="username"
@@ -191,6 +191,7 @@ export default {
       })
         .then(response => response.json())
         .then(response => {
+          console.log(response);
           if (response.message === "Success") {
             // is successful sign up, login the user with the credentials
             fetch(`${process.env.VUE_APP_API_ADRESS}/users/login`, {
@@ -297,5 +298,14 @@ h1 {
 .slide-leave-to {
   transform: translateY(2px);
   font-size: 16px;
+}
+
+@media screen and (max-width: 975px) {
+  form {
+    margin-top: 150px;
+  }
+  .success {
+    margin-top: 300px;
+  }
 }
 </style>

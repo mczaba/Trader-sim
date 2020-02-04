@@ -53,7 +53,6 @@ export default {
   border-bottom: 1px solid var(--borders);
   cursor: pointer;
   h2 {
-    line-height: 80px;
     margin: 0;
   }
   &:last-child {

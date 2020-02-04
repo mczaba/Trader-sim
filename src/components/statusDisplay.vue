@@ -23,7 +23,7 @@ div {
   width: 100%;
   height: 35px;
   text-align: center;
-  background-color: var(--background-main);
+  background-color: rgba(0, 0, 0, 0);
 }
 
 h2 {

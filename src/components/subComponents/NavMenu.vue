@@ -81,6 +81,7 @@ p {
   display: flex;
   flex-direction: column;
   border: 1px solid var(--borders);
+  z-index: 10;
   .link,
   p {
     line-height: 2em;
