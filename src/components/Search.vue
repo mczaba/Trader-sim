@@ -7,9 +7,9 @@
           type="text"
           v-model="searchTerm"
           @keydown="keydown"
-          placeholder="search stock"
+          placeholder="Search stock"
         />
-        <button @click="search">search</button>
+        <button @click="search">Search</button>
       </div>
     </div>
     <div class="stocks container" v-if="firstSearch">

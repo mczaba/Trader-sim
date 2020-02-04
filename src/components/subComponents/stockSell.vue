@@ -7,7 +7,12 @@
         <button @click="add">+</button>
       </div>
       <span>{{ totalPrice }}€</span>
-      <button :disabled="sellQuantity > stock.quantity" @click="sell">
+      <button
+        :disabled="
+          sellQuantity > stock.quantity || !Number.isInteger(buyQuantity)
+        "
+        @click="sell"
+      >
         Sell
       </button>
     </div>
@@ -35,7 +40,7 @@ export default {
           ) / 100
         );
       }
-      return this.sellQuantity * this.price;
+      return Math.round(this.sellQuantity * this.price * 100) / 100;
     },
     price() {
       return this.$store.getters.price;
@@ -98,9 +103,6 @@ h2 {
     border: none;
     padding: 10px;
     text-align: center;
-    -webkit-appearance: textfield;
-    -moz-appearance: textfield;
-    appearance: textfield;
     border-top: 1px solid var(--borders);
     border-bottom: 1px solid var(--borders);
   }

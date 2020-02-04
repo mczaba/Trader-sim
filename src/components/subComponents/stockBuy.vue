@@ -7,7 +7,10 @@
         <button @click="add">+</button>
       </div>
       <span :class="{ red: tooExpensive }">{{ totalPrice }}€</span>
-      <button :disabled="totalPrice > funds" @click="buy">
+      <button
+        :disabled="totalPrice > funds || !Number.isInteger(buyQuantity)"
+        @click="buy"
+      >
         buy
       </button>
     </div>
@@ -35,7 +38,7 @@ export default {
           ) / 100
         );
       }
-      return this.buyQuantity * this.price;
+      return Math.round(this.buyQuantity * this.price * 100) / 100;
     },
     funds() {
       return this.$store.getters.getFunds;
@@ -105,9 +108,6 @@ h2 {
     border: none;
     padding: 10px;
     text-align: center;
-    -webkit-appearance: textfield;
-    -moz-appearance: textfield;
-    appearance: textfield;
     border-top: 1px solid var(--borders);
     border-bottom: 1px solid var(--borders);
   }

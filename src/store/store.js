@@ -31,6 +31,8 @@ export default new Vuex.Store({
     buy: ({ commit, state, dispatch }, payload) => {
       if (payload.quantity < 0) {
         alert("can't buy a negative amount");
+      } else if (!Number.isInteger(payload.quantity)) {
+        alert("quantity has to be an integer");
       } else {
         const totalPrice = payload.price * payload.quantity;
         if (totalPrice > state.funds.funds) {
@@ -54,6 +56,8 @@ export default new Vuex.Store({
     sell: ({ commit, getters, dispatch }, payload) => {
       if (payload.quantity < 0) {
         alert("can't sell a negative amount");
+      } else if (!Number.isInteger(payload.quantity)) {
+        alert("quantity has to be an integer");
       } else if (payload.quantity > getters.stockQuantity(payload.symbol)) {
         alert("can't sell more stocks than you own");
       } else {

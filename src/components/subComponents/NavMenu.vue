@@ -14,7 +14,7 @@
         >Watch List</router-link
       >
       <router-link to="/search" class="link" active-class="active"
-        >Search stock</router-link
+        >Search Stock</router-link
       >
     </div>
   </div>
