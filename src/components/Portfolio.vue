@@ -3,7 +3,7 @@
     <h1 class="summary container">Your Portfolio</h1>
     <div class="stocks container">
       <h1>Stocks</h1>
-      <div class="stockList">
+      <div class="stockList" v-if="owned.length > 0">
         <stock-component
           v-for="stock in owned"
           :key="stock.symbol"
@@ -13,6 +13,7 @@
         >
         </stock-component>
       </div>
+      <h2 v-else>You have no stocks</h2>
     </div>
     <div class="actions container">
       <h1>Sell Stock</h1>
@@ -47,7 +48,8 @@ export default {
   },
   methods: {
     soldOut() {
-      this.activeStock = this.owned[0];
+      this.activeStock = null;
+      setTimeout(() => (this.activeStock = this.owned[0]), 1);
     }
   },
   components: {

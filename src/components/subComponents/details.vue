@@ -23,7 +23,7 @@
       <h2 v-else>{{ error }}</h2>
     </transition>
   </div>
-  <img src="/load.gif" alt="" width="60px" v-else />
+  <img src="/load.svg" alt="" width="60px" v-else />
 </template>
 
 <script>

@@ -3,7 +3,7 @@
     <h1 class="summary container">Your Watch List</h1>
     <div class="stocks container">
       <h1>Stocks</h1>
-      <div class="stockList">
+      <div class="stockList" v-if="favorites.length > 0">
         <stock-component
           v-for="stock in favorites"
           :key="stock.symbol"
@@ -13,6 +13,7 @@
         >
         </stock-component>
       </div>
+      <h2 v-else>There are no stocks in your watch list</h2>
     </div>
     <div class="actions container">
       <h1>Buy Stock</h1>
@@ -60,7 +61,7 @@ h1 {
 .component {
   width: 60%;
   min-width: 975px;
-  margin: 200px auto 0 auto;
+  margin: 40px auto 0 auto;
   display: grid;
   grid-template-columns: 2fr 1fr;
   grid-template-rows: 100px 170px 410px;

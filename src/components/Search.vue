@@ -14,7 +14,7 @@
     </div>
     <div class="stocks container" v-if="firstSearch">
       <h1>Results</h1>
-      <img src="/load.gif" alt="" v-if="loading" />
+      <img src="/load.svg" alt="" v-if="loading" />
       <div v-else>
         <div class="stockList" v-if="!error">
           <stock-component

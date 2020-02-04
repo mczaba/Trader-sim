@@ -16,7 +16,7 @@
     </div>
     <h2 v-else>{{ error }}</h2>
   </div>
-  <img src="/load.gif" alt="" width="40px" v-else />
+  <img src="/load.svg" alt="" width="40px" v-else />
 </template>
 
 <script>

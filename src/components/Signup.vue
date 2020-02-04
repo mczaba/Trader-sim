@@ -95,7 +95,7 @@
         <br />
 
         <input type="submit" value="Sign Up" class="button" v-if="!loading" />
-        <img src="/load.gif" alt="" width="80px" v-else />
+        <img src="/load.svg" alt="" width="80px" v-else />
       </form>
     </validation-observer>
   </div>

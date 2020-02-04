@@ -26,7 +26,7 @@
       />
       <br /><br />
       <input type="submit" value="Log In" class="button" v-if="!loading" />
-      <img src="/load.gif" alt="" width="80px" v-else />
+      <img src="/load.svg" alt="" width="80px" v-else />
     </form>
   </div>
 </template>
