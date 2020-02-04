@@ -93,10 +93,6 @@ html {
   height: 100%;
 }
 
-#view {
-  margin-top: 30px;
-}
-
 button {
   background-color: var(--button);
   border: none;

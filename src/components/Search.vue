@@ -1,6 +1,6 @@
 <template>
   <div class="component">
-    <div class="summary container">
+    <div class="summary container" :class="{ round: !firstSearch }">
       <h1>Search Stock</h1>
       <div class="inputContainer">
         <input
@@ -12,7 +12,7 @@
         <button @click="search">search</button>
       </div>
     </div>
-    <div class="stocks container">
+    <div class="stocks container" v-if="firstSearch">
       <h1>Results</h1>
       <img src="/load.gif" alt="" v-if="loading" />
       <div v-else>
@@ -21,18 +21,18 @@
             v-for="stock in resultsArray"
             :key="stock.symbol"
             :class="{ active: stock === activeStock }"
-            @click.native="changeActiveStock(stock)"
+            @click.native="changeActiveStock($event, stock)"
             :stock="stock"
           ></stock-component>
         </div>
         <h2 v-else>{{ error }}</h2>
       </div>
     </div>
-    <div class="actions container">
+    <div class="actions container" v-if="firstSearch">
       <h1>Buy Stock</h1>
       <stock-buy :stock="activeStock.symbol" v-if="activeStock"></stock-buy>
     </div>
-    <div class="details container">
+    <div class="details container" v-if="firstSearch">
       <h1>Stock Details</h1>
       <stock-details
         :stock="activeStock.symbol"
@@ -53,6 +53,7 @@ export default {
     return {
       searchTerm: "",
       resultsArray: [],
+      firstSearch: false,
       error: null
     };
   },
@@ -60,6 +61,7 @@ export default {
   methods: {
     search() {
       this.toggleLoading();
+      this.firstSearch = true;
       fetch(`${process.env.VUE_APP_API_ADRESS}/API/search/${this.searchTerm}`, {
         mode: "cors"
       })
@@ -83,6 +85,7 @@ export default {
               };
               this.resultsArray.push(itemFilter);
             });
+            this.activeStock = this.resultsArray[0];
           }
         })
         .catch(() => {
@@ -121,11 +124,11 @@ input {
 }
 .component {
   width: 60%;
+  min-width: 975px;
   margin: 40px auto 0 auto;
   display: grid;
   grid-template-columns: 2fr 1fr;
   grid-template-rows: 170px 170px 410px;
-  border: 1px solid var(--borders);
   border-radius: 10px;
   overflow: hidden;
 }
@@ -141,6 +144,7 @@ input {
   align-items: stretch;
   height: 37px;
   width: 30%;
+  min-width: 335px;
   margin: auto;
   button {
     margin-left: 15px;
@@ -163,23 +167,65 @@ input {
 .summary {
   grid-column: 1/ 3;
   grid-row: 1 / 2;
-  border-bottom: 1px solid var(--borders);
+  border: 1px solid var(--borders);
+}
+.round {
+  border-radius: 10px;
 }
 
 .stocks {
   grid-column: 1 / 2;
   grid-row: 2 / 4;
   border-right: 1px solid var(--borders);
+  border-left: 1px solid var(--borders);
+  border-bottom: 1px solid var(--borders);
 }
 
 .actions {
   grid-column: 2 / 3;
   grid-row: 2 / 3;
   border-bottom: 1px solid var(--borders);
+  border-right: 1px solid var(--borders);
 }
 
 .details {
   grid-column: 2 / 3;
   grid-row: 3 / 4;
+  border-right: 1px solid var(--borders);
+  border-bottom: 1px solid var(--borders);
+}
+
+@media screen and (max-width: 975px) {
+  .component {
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: auto;
+    grid-template-rows: 170px 550px 170px 410px;
+    margin: 0;
+  }
+
+  .stocks {
+    grid-column: 1/ 2;
+    grid-row: 2/3;
+    border: none;
+    border-bottom: 1px solid var(--borders);
+  }
+  .actions {
+    grid-column: 1/ 2;
+    grid-row: 3/4;
+    border: none;
+    border-bottom: 1px solid var(--borders);
+  }
+  .details {
+    grid-column: 1/ 2;
+    grid-row: 4/5;
+    border: none;
+  }
+  .summary {
+    grid-column: 1/ 2;
+    grid-row: 1/2;
+    border: none;
+    border-bottom: 1px solid var(--borders);
+  }
 }
 </style>

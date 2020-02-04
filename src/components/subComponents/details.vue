@@ -1,5 +1,5 @@
 <template>
-  <div class="details" v-if="!loading">
+  <div class="detailsComponent" v-if="!loading">
     <transition name="fade">
       <ul class="info" v-if="!error">
         <li>Name: {{ name }}</li>
@@ -80,7 +80,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.details {
+.detailsComponent {
   margin: 0;
 }
 img {

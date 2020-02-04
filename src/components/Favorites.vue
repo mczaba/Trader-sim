@@ -45,6 +45,9 @@ export default {
     stockDetails,
     stockBuy,
     stockComponent
+  },
+  mounted() {
+    this.activeStock = this.favorites[0];
   }
 };
 </script>
@@ -56,6 +59,7 @@ h1 {
 }
 .component {
   width: 60%;
+  min-width: 975px;
   margin: 200px auto 0 auto;
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -105,5 +109,36 @@ h1 {
 .details {
   grid-column: 2 / 3;
   grid-row: 3 / 4;
+}
+
+@media screen and (max-width: 975px) {
+  .component {
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: auto;
+    grid-template-rows: 170px 410px 600px;
+    margin: 0;
+  }
+
+  .stocks {
+    grid-column: 1/ 2;
+    grid-row: 3/4;
+    border: none;
+  }
+  .actions {
+    grid-column: 1/ 2;
+    grid-row: 1/2;
+    border: none;
+    border-bottom: 1px solid var(--borders);
+  }
+  .details {
+    grid-column: 1/ 2;
+    grid-row: 2/3;
+    border: none;
+    border-bottom: 1px solid var(--borders);
+  }
+  .summary {
+    display: none;
+  }
 }
 </style>
