@@ -18,10 +18,14 @@ export const activeStock = {
     };
   },
   methods: {
-    changeActiveStock(stock) {
-      if (stock !== this.activeStock) {
-        this.activeStock = null;
-        setTimeout(() => (this.activeStock = stock), 1);
+    changeActiveStock(event, stock) {
+      if (
+        !(event.target.tagName === "BUTTON" || event.target.tagName === "INPUT")
+      ) {
+        if (stock !== this.activeStock) {
+          this.activeStock = null;
+          setTimeout(() => (this.activeStock = stock), 1);
+        }
       }
     }
   }

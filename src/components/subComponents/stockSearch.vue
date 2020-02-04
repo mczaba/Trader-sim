@@ -1,7 +1,7 @@
 <template>
   <div class="stockContainer">
     <h2>{{ stock.symbol }} ({{ stock.name }})</h2>
-    <button :disabled="isInFavorites" @click.stop="addToFav">
+    <button :disabled="isInFavorites" @click="addToFav">
       {{ favoriteButtonText }}
     </button>
   </div>

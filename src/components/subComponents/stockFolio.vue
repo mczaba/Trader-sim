@@ -7,16 +7,15 @@
         v-model="newName"
         v-else
         @keydown="keydown"
-        @click.stop=""
         id="nameInput"
       />
       x
       {{ stock.quantity }}
     </h2>
-    <button @click.stop="editingStock" v-if="!editing">
+    <button @click="editingStock" v-if="!editing">
       Edit Name
     </button>
-    <button @click.stop="changeName" v-else v-click-outside="resetEdit">
+    <button @click="changeName" v-click-outside="resetEdit" v-else>
       Save Name
     </button>
   </div>

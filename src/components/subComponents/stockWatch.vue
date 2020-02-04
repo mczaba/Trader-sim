@@ -7,16 +7,15 @@
         v-model="newName"
         v-else
         @keydown="keydown"
-        @click.stop=""
         id="nameInput"
       />
     </h2>
     <div class="buttons">
-      <button @click.stop="removeFromFav">Unwatch</button>
-      <button @click.stop="editingStock" v-if="!editing">
+      <button @click="removeFromFav">Unwatch</button>
+      <button @click="editingStock" v-if="!editing">
         Edit Name
       </button>
-      <button @click.stop="changeName" v-click-outside="resetEdit" v-else>
+      <button @click="changeName" v-click-outside="resetEdit" v-if="editing">
         Save Name
       </button>
     </div>

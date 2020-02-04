@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <navbar></navbar>
+    <navbar v-if="!mobileView"></navbar>
+    <mobile-navbar v-else></mobile-navbar>
     <status-display id="statusDisplay"></status-display>
     <router-view id="view"></router-view>
   </div>
@@ -8,19 +9,31 @@
 
 <script>
 import navbar from "./components/Navbar.vue";
+import mobileNavbar from "./components/NavbarMobile.vue";
 import statusDisplay from "./components/statusDisplay.vue";
 
 export default {
   name: "app",
   components: {
     navbar,
+    mobileNavbar,
     statusDisplay
+  },
+  data() {
+    return { windowWidth: window.innerWidth };
+  },
+  computed: {
+    mobileView() {
+      return this.windowWidth < 1000;
+    }
+  },
+  mounted() {
+    window.addEventListener("resize", () => {
+      this.windowWidth = window.innerWidth;
+    });
   },
   created() {
     this.$store.dispatch("updateRate");
-    fetch(`${process.env.VUE_APP_API_ADRESS}`, {
-      mode: "cors"
-    });
     if (this.$store.getters.token) {
       fetch(`${process.env.VUE_APP_API_ADRESS}/users/refresh`, {
         mode: "cors",
@@ -44,6 +57,10 @@ export default {
             "Couldn't log in : can't reach the server"
           );
         });
+    } else {
+      fetch(`${process.env.VUE_APP_API_ADRESS}`, {
+        mode: "cors"
+      });
     }
   }
 };

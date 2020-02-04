@@ -8,7 +8,7 @@
           v-for="stock in owned"
           :key="stock.symbol"
           :class="{ active: stock === activeStock }"
-          @click.native="changeActiveStock(stock)"
+          @click.native="changeActiveStock($event, stock)"
           :stock="stock"
         >
         </stock-component>
@@ -36,25 +36,16 @@
 import stockDetails from "./subComponents/details.vue";
 import stockSell from "./subComponents/stockSell.vue";
 import stockComponent from "./subComponents/stockFolio.vue";
+import { activeStock } from "../assets/mixins";
 
 export default {
-  data() {
-    return {
-      activeStock: null
-    };
-  },
+  mixins: [activeStock],
   computed: {
     owned() {
       return this.$store.getters.owned;
     }
   },
   methods: {
-    changeActiveStock(stock) {
-      if (stock !== this.activeStock) {
-        this.activeStock = null;
-        setTimeout(() => (this.activeStock = stock), 1);
-      }
-    },
     soldOut() {
       this.activeStock = null;
     }

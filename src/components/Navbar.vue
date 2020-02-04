@@ -15,83 +15,28 @@
       >
     </div>
     <div class="flex-container" id="right-side">
-      <p id="funds">Funds : {{ funds }}€</p>
+      <p id="funds">Funds : {{ fundsFormat }}€</p>
       <p>1€ = {{ rate }}$</p>
-      <div class="dropdown-container">
-        <p
-          class="button"
-          :class="{ dropdownActive: showDropdown }"
-          @click.stop="show"
-          v-if="!authUsername"
-        >
-          Account ▾
-        </p>
-        <p
-          v-if="authUsername"
-          @click.stop="show"
-          class="button"
-          :class="{ dropdownActive: showDropdown }"
-        >
-          {{ authUsername }} ▾
-        </p>
-        <div
-          class="dropdown"
-          v-click-outside="hide"
-          @click="hide"
-          v-if="showDropdown && !authUsername"
-        >
-          <router-link to="/signup" class="link">Sign Up</router-link>
-          <router-link to="/login" class="link">Log In</router-link>
-        </div>
-        <div
-          class="dropdown"
-          v-click-outside="hide"
-          @click="hide"
-          v-if="showDropdown && authUsername"
-        >
-          <p @click="save">Save</p>
-          <p @click="logout">Logout</p>
-        </div>
-      </div>
+      <account-menu></account-menu>
     </div>
   </nav>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import accountMenu from "./subComponents/AccountMenu.vue";
+
 export default {
   data() {
     return {
       showDropdown: false
     };
   },
-  computed: {
-    funds() {
-      return this.$store.getters.fundsFormat;
-    },
-    rate() {
-      return this.$store.getters.rate;
-    },
-    authUsername() {
-      return this.$store.getters.username;
-    }
+  components: {
+    accountMenu
   },
-  methods: {
-    hide() {
-      this.showDropdown = false;
-      this.color = "#f9f6f6";
-    },
-    show() {
-      this.showDropdown = true;
-      this.color = "#eee";
-    },
-    save() {
-      this.$store.dispatch("save");
-    },
-    logout() {
-      this.$store.commit("logOut");
-      this.$store.commit("reset");
-      this.$router.push("/");
-    }
+  computed: {
+    ...mapGetters(["fundsFormat", "rate", "username"])
   }
 };
 </script>
@@ -113,7 +58,7 @@ nav {
   display: flex;
   justify-content: stretch;
   align-items: flex-start;
-  width: 25%;
+  width: 480px;
   p {
     line-height: 50px;
     width: 150px;
@@ -121,12 +66,7 @@ nav {
   }
   .button {
     cursor: pointer;
-    border-bottom: 1px solid var(--borders);
     flex-grow: 1;
-  }
-  .dropdownActive {
-    background-color: var(--background-secondary);
-    border-bottom: 2px solid var(--text-active);
   }
 
   a {
@@ -154,26 +94,5 @@ nav {
 .active {
   color: var(--text-active) !important;
   border-bottom: 2px solid var(--text-active);
-}
-
-.dropdown {
-  background-color: var(--background-secondary);
-  border-bottom-left-radius: 8px;
-
-  box-shadow: #eee;
-  width: 150px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  .link,
-  p {
-    line-height: 2em;
-    font-weight: bold;
-    cursor: pointer;
-    width: 100%;
-    &:hover {
-      background-color: var(--background-secondary-active);
-    }
-  }
 }
 </style>

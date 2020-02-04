@@ -8,7 +8,7 @@
           v-for="stock in favorites"
           :key="stock.symbol"
           :class="{ active: stock === activeStock }"
-          @click.native="changeActiveStock(stock)"
+          @click.native="changeActiveStock($event, stock)"
           :stock="stock"
         >
         </stock-component>
