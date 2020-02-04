@@ -191,7 +191,6 @@ export default {
       })
         .then(response => response.json())
         .then(response => {
-          console.log(response);
           if (response.message === "Success") {
             // is successful sign up, login the user with the credentials
             fetch(`${process.env.VUE_APP_API_ADRESS}/users/login`, {
